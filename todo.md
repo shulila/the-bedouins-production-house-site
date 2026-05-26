@@ -1,0 +1,15 @@
+- [ ] Implement theme toggle (dark/light) with a subtle icon
+- [ ] Ensure Hero section background remains black in light mode
+- [ ] Mobile: Reorder Hero section so Logo is above Text
+- [ ] Update all large colored headers to Turquoise #3abfb5
+- [ ] Update all colored elements (frames, etc.) to Turquoise #3abfb5
+- [ ] Ensure continuous text remains white
+- [ ] Apply "View Our Work" glow effect to "Start a Project" button
+- [ ] Style "Start a Project" button to match other buttons
+- [ ] Standardize all frames: rounded corners, thin Turquoise contour, 10-15% Turquoise tint fill
+- [ ] Change "The Dream Team" header to "The Tent"
+- [ ] Replace YouTube link with embedded Showreel (Google Drive link provided)
+- [ ] Add WhatsApp icon/link in Contact section (+972-54-5534560)
+- [ ] Center text blocks and logo vertically in Hero section (including mobile)
+- [ ] Remove "Or fill out the form below..." text
+- [ ] Add scroll-to-top functionality to the footer logo
