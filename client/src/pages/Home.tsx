@@ -41,13 +41,13 @@ export default function Home() {
       image: "/images/nimrod-turquoise.png"
     },
     {
-      id: "gal",
-      name: "Gal Ziv",
-      role: "Content Creator, Entrepreneur & Producer",
-      bio: "Specializing in visual content development, production, and digital accessibility through the integration of technology and AI tools.",
-      expertise: ["Visual Content", "Production", "Digital Accessibility"],
-      gradient: "from-[#d946ef] to-[#a21caf]",
-      image: "/images/gal-magenta.png",
+      id: "shila",
+      name: "Shilla Bahar",
+      role: "Founder, AI Creator & Designer",
+      bio: "Founder of The Bedouins. AI creator and designer crafting visual worlds where technology amplifies creative vision and every tool serves the story.",
+      expertise: ["Founder", "AI Creation", "Visual Design"],
+      gradient: "from-[#3abfb5] to-[#9d4edd]",
+      image: "https://files.manuscdn.com/user_upload_by_module/session_file/116189056/fORmGJnVKqsSfmjD.png"
     },
     {
       id: "ella",
@@ -68,13 +68,13 @@ export default function Home() {
       image: "/images/yaron-orange.png"
     },
     {
-      id: "shila",
-      name: "Shilla Bahar",
-      role: "Founder & Creative Producer",
-      bio: "Founder of The Bedouins. Architects AI-powered production workflows where technology amplifies creative vision and every tool serves the story.",
-      expertise: ["Founder", "AI Production", "Creative Direction"],
-      gradient: "from-[#3abfb5] to-[#9d4edd]",
-      image: "https://files.manuscdn.com/user_upload_by_module/session_file/116189056/fORmGJnVKqsSfmjD.png"
+      id: "gal",
+      name: "Gal Ziv",
+      role: "Content Creator, Entrepreneur & Producer",
+      bio: "Specializing in visual content development, production, and digital accessibility through the integration of technology and AI tools.",
+      expertise: ["Visual Content", "Production", "Digital Accessibility"],
+      gradient: "from-[#d946ef] to-[#a21caf]",
+      image: "/images/gal-magenta.png",
     },
   ];
 
