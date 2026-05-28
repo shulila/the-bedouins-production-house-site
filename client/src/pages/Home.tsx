@@ -32,24 +32,6 @@ export default function Home() {
     imageScale?: number;
   }> = [
     {
-      id: "yaron",
-      name: "Yaron Bahar",
-      role: "Sound Designer & Composer",
-      bio: "Master of sonic landscapes. Creates immersive soundscapes, original compositions, and professional audio design that elevates every project.",
-      expertise: ["Music Composition", "Sound Design", "Audio Engineering"],
-      gradient: "from-[#df6924] to-[#c5581b]",
-      image: "/images/yaron-orange.png"
-    },
-    {
-      id: "shila",
-      name: "Shilla Bahar",
-      role: "AI Production & Design",
-      bio: "Creative technologist specializing in AI-powered production workflows. Designs visual concepts and manages character/style consistency.",
-      expertise: ["AI Production", "Character Design", "Style Direction"],
-      gradient: "from-[#3abfb5] to-[#9d4edd]",
-      image: "https://files.manuscdn.com/user_upload_by_module/session_file/116189056/fORmGJnVKqsSfmjD.png"
-    },
-    {
       id: "nimrod",
       name: "Nimrod Reshef",
       role: "Director",
@@ -69,6 +51,15 @@ export default function Home() {
       imageScale: 0.85,
     },
     {
+      id: "yaron",
+      name: "Yaron Bahar",
+      role: "Sound Designer & Composer",
+      bio: "Master of sonic landscapes. Creates immersive soundscapes, original compositions, and professional audio design that elevates every project.",
+      expertise: ["Music Composition", "Sound Design", "Audio Engineering"],
+      gradient: "from-[#df6924] to-[#c5581b]",
+      image: "/images/yaron-orange.png"
+    },
+    {
       id: "ella",
       name: "Ella Taran",
       role: "AI Animation & Editor",
@@ -76,6 +67,15 @@ export default function Home() {
       expertise: ["AI Animation", "VFX", "Video Editing"],
       gradient: "from-[#9d4edd] to-[#7b2cbf]",
       image: "https://files.manuscdn.com/user_upload_by_module/session_file/116189056/aLRmQRTkGuTOrrGk.png"
+    },
+    {
+      id: "shila",
+      name: "Shilla Bahar",
+      role: "Founder & Creative Producer",
+      bio: "Founder of The Bedouins. Architects AI-powered production workflows where technology amplifies creative vision and every tool serves the story.",
+      expertise: ["Founder", "AI Production", "Creative Direction"],
+      gradient: "from-[#3abfb5] to-[#9d4edd]",
+      image: "https://files.manuscdn.com/user_upload_by_module/session_file/116189056/fORmGJnVKqsSfmjD.png"
     },
   ];
 
