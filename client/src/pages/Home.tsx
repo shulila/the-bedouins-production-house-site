@@ -223,14 +223,31 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            {/* Project Cards */}
-            {[1, 2, 3].map((item) => (
+            {/* Arlozorov - real project */}
+            <Card className="bg-primary/5 border-primary/30 backdrop-blur-sm overflow-hidden group hover:-translate-y-1 transition-all duration-500 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
+              <div className="relative aspect-video bg-black overflow-hidden">
+                <video
+                  src="/videos/arlozorov-final.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold text-primary mb-2">Arlozorov</h3>
+                <p className="text-sm text-muted-foreground">Competition Entry</p>
+              </CardContent>
+            </Card>
+
+            {/* Placeholder Project Cards */}
+            {[2, 3].map((item) => (
               <Card key={item} className="bg-primary/5 border-primary/30 backdrop-blur-sm overflow-hidden group hover:-translate-y-1 transition-all duration-500 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
                 <div className="relative aspect-video bg-black/50 overflow-hidden">
                   <div className="absolute inset-0 flex items-center justify-center group-hover:scale-110 transition-transform duration-700">
                     <Play className="w-12 h-12 text-primary/50 group-hover:text-primary transition-colors duration-300" />
                   </div>
-                  {/* Removed the black stripe overlay */}
                 </div>
                 <CardContent className="p-6">
                   <h3 className="text-xl font-bold text-primary mb-2">Project Title {item}</h3>
