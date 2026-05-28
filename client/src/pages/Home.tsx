@@ -94,17 +94,37 @@ export default function Home() {
     <div className="min-h-screen flex flex-col relative overflow-x-hidden transition-colors duration-300">
       {/* Sticky Header Bar */}
       <div className="fixed top-0 left-0 right-0 z-40 h-24 bg-background/80 backdrop-blur-md border-b border-primary/20 shadow-lg transition-all duration-300">
-        <div className="container mx-auto px-4 h-full flex items-center justify-center md:justify-start">
+        <div className="container mx-auto px-4 h-full flex items-center justify-between">
           {/* Logo Container - Increased Size */}
-          <div 
+          <div
             className="w-72 md:w-64 cursor-pointer hover:opacity-80 transition-opacity"
             onClick={scrollToTop}
           >
-            <img 
-              src="https://files.manuscdn.com/user_upload_by_module/session_file/116189056/BGukRTVCbgkgHLWC.png" 
-              alt="The Bedouins" 
+            <img
+              src="https://files.manuscdn.com/user_upload_by_module/session_file/116189056/BGukRTVCbgkgHLWC.png"
+              alt="The Bedouins"
               className="w-full h-auto object-contain drop-shadow-lg"
             />
+          </div>
+
+          {/* Contact Icons - aligned to content right edge */}
+          <div className="flex items-center gap-3">
+            <a
+              href="mailto:thebedouins.ai@gmail.com"
+              className="p-2 rounded-full bg-background/10 backdrop-blur-sm border border-primary/20 hover:bg-primary/10 transition-all duration-300"
+              aria-label="Email us"
+            >
+              <Mail className="w-5 h-5 text-primary" />
+            </a>
+            <a
+              href="https://wa.me/972545534560"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full bg-background/10 backdrop-blur-sm border border-primary/20 hover:bg-primary/10 transition-all duration-300"
+              aria-label="WhatsApp"
+            >
+              <MessageCircle className="w-5 h-5 text-primary" />
+            </a>
           </div>
         </div>
       </div>
@@ -171,17 +191,13 @@ export default function Home() {
           {/* Logo/Video - Right - Increased Size */}
           <div className="w-full lg:w-[60%] relative aspect-video animate-in zoom-in duration-1000 flex justify-end translate-x-0 lg:translate-x-24">
             <div className="absolute inset-0 bg-[#3abfb5] rounded-full blur-[120px] opacity-20 animate-pulse" />
-            <video 
-              src="https://files.manuscdn.com/user_upload_by_module/session_file/116189056/KAoYvMUyJAmLAWyA.mp4" 
-              autoPlay 
-              loop 
-              muted 
+            <video
+              src="https://files.manuscdn.com/user_upload_by_module/session_file/116189056/KAoYvMUyJAmLAWyA.mp4"
+              autoPlay
+              loop
+              muted
               playsInline
-              className="w-full h-full object-contain drop-shadow-2xl relative z-10 md:rounded-xl scale-110 origin-right"
-              style={{
-                maskImage: 'radial-gradient(circle, black 60%, transparent 95%)',
-                WebkitMaskImage: 'radial-gradient(circle, black 60%, transparent 95%)'
-              }}
+              className="w-full h-full object-contain relative z-10 scale-110 origin-right mix-blend-screen"
             />
           </div>
         </div>
