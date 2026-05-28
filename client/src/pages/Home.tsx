@@ -259,7 +259,7 @@ export default function Home() {
                   key={project.src}
                   className={`bg-primary/5 border-primary/30 backdrop-blur-sm overflow-hidden group hover:-translate-y-1 transition-all duration-500 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)] ${
                     isLonelyLast
-                      ? "md:col-span-2 md:max-w-[calc(50%-1rem)] md:mx-auto lg:col-span-3 lg:max-w-[calc(33.333%-1.333rem)] lg:mx-auto"
+                      ? "md:col-span-2 md:w-[calc(50%-1rem)] md:mx-auto lg:col-span-3 lg:w-[calc(33.333%-1.333rem)] lg:mx-auto"
                       : ""
                   }`}
                 >
