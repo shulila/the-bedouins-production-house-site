@@ -21,7 +21,16 @@ export default function Home() {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  const teamMembers = [
+  const teamMembers: Array<{
+    id: string;
+    name: string;
+    role: string;
+    bio: string;
+    expertise: string[];
+    gradient: string;
+    image: string;
+    imageScale?: number;
+  }> = [
     {
       id: "nimrod",
       name: "Nimrod Reshef",
@@ -30,15 +39,6 @@ export default function Home() {
       expertise: ["Directing", "Storyboarding", "Visual Narrative"],
       gradient: "from-[#3abfb5] to-[#2a9d94]",
       image: "/images/nimrod-turquoise.png"
-    },
-    {
-      id: "yaron",
-      name: "Yaron Bahar",
-      role: "Sound Designer & Composer",
-      bio: "Master of sonic landscapes. Creates immersive soundscapes, original compositions, and professional audio design that elevates every project.",
-      expertise: ["Music Composition", "Sound Design", "Audio Engineering"],
-      gradient: "from-[#df6924] to-[#c5581b]",
-      image: "/images/yaron-orange.png"
     },
     {
       id: "ella",
@@ -50,6 +50,15 @@ export default function Home() {
       image: "https://files.manuscdn.com/user_upload_by_module/session_file/116189056/aLRmQRTkGuTOrrGk.png"
     },
     {
+      id: "yaron",
+      name: "Yaron Bahar",
+      role: "Sound Designer & Composer",
+      bio: "Master of sonic landscapes. Creates immersive soundscapes, original compositions, and professional audio design that elevates every project.",
+      expertise: ["Music Composition", "Sound Design", "Audio Engineering"],
+      gradient: "from-[#df6924] to-[#c5581b]",
+      image: "/images/yaron-orange.png"
+    },
+    {
       id: "shila",
       name: "Shilla Bahar",
       role: "AI Production & Design",
@@ -57,6 +66,16 @@ export default function Home() {
       expertise: ["AI Production", "Character Design", "Style Direction"],
       gradient: "from-[#3abfb5] to-[#9d4edd]",
       image: "https://files.manuscdn.com/user_upload_by_module/session_file/116189056/fORmGJnVKqsSfmjD.png"
+    },
+    {
+      id: "gal",
+      name: "Gal Ziv",
+      role: "Content Creator, Entrepreneur & Producer",
+      bio: "Specializing in visual content development, production, and digital accessibility through the integration of technology and AI tools.",
+      expertise: ["Visual Content", "Production", "Digital Accessibility"],
+      gradient: "from-[#d946ef] to-[#a21caf]",
+      image: "/images/gal-magenta.png",
+      imageScale: 0.85,
     },
   ];
 
@@ -190,9 +209,9 @@ export default function Home() {
             {/* Featured Project Video Card */}
             <Card className="col-span-1 md:col-span-2 lg:col-span-3 bg-black/40 border-primary/30 overflow-hidden group hover:border-primary/60 transition-all duration-500 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
               <div className="relative aspect-video w-full bg-black overflow-hidden">
-                <iframe 
-                  src="https://www.youtube.com/embed/vqB3MhYCFuM?si=featured-project&controls=0&showinfo=0&rel=0&modestbranding=1&autoplay=1&mute=1&loop=1&playlist=vqB3MhYCFuM" 
-                  className="absolute inset-0 w-full h-full scale-[1.35]"
+                <iframe
+                  src="https://www.youtube.com/embed/vqB3MhYCFuM?si=featured-project&controls=0&showinfo=0&rel=0&modestbranding=1&autoplay=1&mute=1&loop=1&playlist=vqB3MhYCFuM"
+                  className="absolute inset-0 w-full h-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                   loading="lazy"
@@ -304,15 +323,20 @@ export default function Home() {
               Our Tent
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl">
-              Four masters of their craft, united by a shared vision of creative excellence.
+              Five masters of their craft, united by a shared vision of creative excellence.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {teamMembers.map((member, idx) => (
+            {teamMembers.map((member, idx) => {
+              const isLonelyLast =
+                teamMembers.length % 2 === 1 && idx === teamMembers.length - 1;
+              return (
               <div
                 key={member.id}
-                className="group cursor-pointer h-full perspective-1000"
+                className={`group cursor-pointer h-full perspective-1000 ${
+                  isLonelyLast ? "md:col-span-2 md:w-[calc(50%-1rem)] md:mx-auto" : ""
+                }`}
                 onMouseEnter={() => setHoveredTeamMember(member.id)}
                 onMouseLeave={() => setHoveredTeamMember(null)}
               >
@@ -324,10 +348,15 @@ export default function Home() {
                   {/* Team Member Image Background - Disappears on Hover */}
                   {member.image && (
                     <div className={`absolute inset-0 z-0 transition-opacity duration-500 ${hoveredTeamMember === member.id ? 'opacity-0' : 'opacity-100'}`}>
-                      <img 
-                        src={member.image} 
+                      <img
+                        src={member.image}
                         alt={member.name}
                         className="w-full h-full object-cover object-center"
+                        style={member.imageScale ? { transform: `scale(${member.imageScale})` } : undefined}
+                        onError={(e) => {
+                          const parent = e.currentTarget.parentElement;
+                          if (parent) parent.style.display = "none";
+                        }}
                       />
                     </div>
                   )}
@@ -358,12 +387,13 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Contact      {/* Contact Section */}
+      {/* Contact Section */}
       <section id="contact" className="py-16 md:py-24 relative bg-background overflow-hidden"> <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center space-y-12">
             <div className="space-y-6">
