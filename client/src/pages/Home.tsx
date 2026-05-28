@@ -32,24 +32,6 @@ export default function Home() {
     imageScale?: number;
   }> = [
     {
-      id: "nimrod",
-      name: "Nimrod Reshef",
-      role: "Director",
-      bio: "Visionary storyteller with decades of experience in directing and visual narrative design. Brings cinematic excellence to every frame.",
-      expertise: ["Directing", "Storyboarding", "Visual Narrative"],
-      gradient: "from-[#3abfb5] to-[#2a9d94]",
-      image: "/images/nimrod-turquoise.png"
-    },
-    {
-      id: "ella",
-      name: "Ella Taran",
-      role: "AI Animation & Editor",
-      bio: "Pioneer in AI-driven animation and visual effects. Combines cutting-edge technology with artistic vision to create stunning animations.",
-      expertise: ["AI Animation", "VFX", "Video Editing"],
-      gradient: "from-[#9d4edd] to-[#7b2cbf]",
-      image: "https://files.manuscdn.com/user_upload_by_module/session_file/116189056/aLRmQRTkGuTOrrGk.png"
-    },
-    {
       id: "yaron",
       name: "Yaron Bahar",
       role: "Sound Designer & Composer",
@@ -68,6 +50,15 @@ export default function Home() {
       image: "https://files.manuscdn.com/user_upload_by_module/session_file/116189056/fORmGJnVKqsSfmjD.png"
     },
     {
+      id: "nimrod",
+      name: "Nimrod Reshef",
+      role: "Director",
+      bio: "Visionary storyteller with decades of experience in directing and visual narrative design. Brings cinematic excellence to every frame.",
+      expertise: ["Directing", "Storyboarding", "Visual Narrative"],
+      gradient: "from-[#3abfb5] to-[#2a9d94]",
+      image: "/images/nimrod-turquoise.png"
+    },
+    {
       id: "gal",
       name: "Gal Ziv",
       role: "Content Creator, Entrepreneur & Producer",
@@ -76,6 +67,15 @@ export default function Home() {
       gradient: "from-[#d946ef] to-[#a21caf]",
       image: "/images/gal-magenta.png",
       imageScale: 0.85,
+    },
+    {
+      id: "ella",
+      name: "Ella Taran",
+      role: "AI Animation & Editor",
+      bio: "Pioneer in AI-driven animation and visual effects. Combines cutting-edge technology with artistic vision to create stunning animations.",
+      expertise: ["AI Animation", "VFX", "Video Editing"],
+      gradient: "from-[#9d4edd] to-[#7b2cbf]",
+      image: "https://files.manuscdn.com/user_upload_by_module/session_file/116189056/aLRmQRTkGuTOrrGk.png"
     },
   ];
 
