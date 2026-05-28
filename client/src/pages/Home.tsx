@@ -132,7 +132,7 @@ export default function Home() {
           {/* Text Content - Left */}
           <div className="w-full lg:w-[40%] flex flex-col items-start text-left animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 pt-8 lg:pt-0">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-primary mb-6 drop-shadow-lg font-display leading-tight">
-              Bringing Stories to Life with AI, Art and World-Class Sound
+              Bringing Stories to Life with AI, Art and Sound
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed mb-8">
               We are The Bedouins - a premium creative studio blending cutting-edge AI with world-class design, sound, and storytelling. From short films to commercials and beyond, we turn ideas into immersive visual experiences.
