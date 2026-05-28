@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Mail, MessageCircle, Moon, Play, Sparkles, Sun } from "lucide-react";
+import { Mail, MessageCircle, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -76,6 +76,16 @@ export default function Home() {
       gradient: "from-[#d946ef] to-[#a21caf]",
       image: "/images/gal-magenta.png",
     },
+  ];
+
+  const portfolioProjects: Array<{ src: string; title: string; subtitle: string }> = [
+    { src: "/videos/arlozorov-final.mp4", title: "Arlozorov", subtitle: "Competition Entry" },
+    { src: "/videos/ai-1.mp4", title: "AI Visual 01", subtitle: "Generative AI" },
+    { src: "/videos/ai-2.mp4", title: "AI Visual 02", subtitle: "Generative AI" },
+    { src: "/videos/ai-3.mp4", title: "AI Visual 03", subtitle: "Generative AI" },
+    { src: "/videos/ai-4.mp4", title: "AI Visual 04", subtitle: "Generative AI" },
+    { src: "/videos/ai-5.mp4", title: "AI Visual 05", subtitle: "Generative AI" },
+    { src: "/videos/ai-6.mp4", title: "AI Visual 06", subtitle: "Generative AI" },
   ];
 
   if (!mounted) return null;
@@ -223,38 +233,38 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            {/* Arlozorov - real project */}
-            <Card className="bg-primary/5 border-primary/30 backdrop-blur-sm overflow-hidden group hover:-translate-y-1 transition-all duration-500 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
-              <div className="relative aspect-video bg-black overflow-hidden">
-                <video
-                  src="/videos/arlozorov-final.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              </div>
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold text-primary mb-2">Arlozorov</h3>
-                <p className="text-sm text-muted-foreground">Competition Entry</p>
-              </CardContent>
-            </Card>
-
-            {/* Placeholder Project Cards */}
-            {[2, 3].map((item) => (
-              <Card key={item} className="bg-primary/5 border-primary/30 backdrop-blur-sm overflow-hidden group hover:-translate-y-1 transition-all duration-500 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
-                <div className="relative aspect-video bg-black/50 overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center group-hover:scale-110 transition-transform duration-700">
-                    <Play className="w-12 h-12 text-primary/50 group-hover:text-primary transition-colors duration-300" />
+            {/* Project Cards */}
+            {portfolioProjects.map((project, idx) => {
+              const isLonelyLast =
+                idx === portfolioProjects.length - 1 &&
+                portfolioProjects.length % 3 === 1;
+              return (
+                <Card
+                  key={project.src}
+                  className={`bg-primary/5 border-primary/30 backdrop-blur-sm overflow-hidden group hover:-translate-y-1 transition-all duration-500 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)] ${
+                    isLonelyLast
+                      ? "md:col-span-2 md:max-w-[calc(50%-1rem)] md:mx-auto lg:col-span-3 lg:max-w-[calc(33.333%-1.333rem)] lg:mx-auto"
+                      : ""
+                  }`}
+                >
+                  <div className="relative aspect-video bg-black overflow-hidden">
+                    <video
+                      src={project.src}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="metadata"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
                   </div>
-                </div>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold text-primary mb-2">Project Title {item}</h3>
-                  <p className="text-sm text-muted-foreground">AI Animation • Sound Design</p>
-                </CardContent>
-              </Card>
-            ))}
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-bold text-primary mb-2">{project.title}</h3>
+                    <p className="text-sm text-muted-foreground">{project.subtitle}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
