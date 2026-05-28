@@ -48,16 +48,6 @@ export default function Home() {
       expertise: ["Visual Content", "Production", "Digital Accessibility"],
       gradient: "from-[#d946ef] to-[#a21caf]",
       image: "/images/gal-magenta.png",
-      imageScale: 0.85,
-    },
-    {
-      id: "yaron",
-      name: "Yaron Bahar",
-      role: "Sound Designer & Composer",
-      bio: "Master of sonic landscapes. Creates immersive soundscapes, original compositions, and professional audio design that elevates every project.",
-      expertise: ["Music Composition", "Sound Design", "Audio Engineering"],
-      gradient: "from-[#df6924] to-[#c5581b]",
-      image: "/images/yaron-orange.png"
     },
     {
       id: "ella",
@@ -67,6 +57,15 @@ export default function Home() {
       expertise: ["AI Animation", "VFX", "Video Editing"],
       gradient: "from-[#9d4edd] to-[#7b2cbf]",
       image: "https://files.manuscdn.com/user_upload_by_module/session_file/116189056/aLRmQRTkGuTOrrGk.png"
+    },
+    {
+      id: "yaron",
+      name: "Yaron Bahar",
+      role: "Sound Designer & Composer",
+      bio: "Master of sonic landscapes. Creates immersive soundscapes, original compositions, and professional audio design that elevates every project.",
+      expertise: ["Music Composition", "Sound Design", "Audio Engineering"],
+      gradient: "from-[#df6924] to-[#c5581b]",
+      image: "/images/yaron-orange.png"
     },
     {
       id: "shila",
