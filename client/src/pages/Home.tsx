@@ -93,11 +93,11 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden transition-colors duration-300">
       {/* Sticky Header Bar */}
-      <div className="fixed top-0 left-0 right-0 z-40 h-24 bg-background/80 backdrop-blur-md border-b border-primary/20 shadow-lg transition-all duration-300">
-        <div className="container mx-auto px-4 h-full flex items-center justify-between">
+      <div className="fixed top-0 left-0 right-0 z-40 h-16 sm:h-20 md:h-24 bg-background/80 backdrop-blur-md border-b border-primary/20 shadow-lg transition-all duration-300">
+        <div className="container mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
           {/* Logo Container - Increased Size */}
           <div
-            className="w-72 md:w-64 cursor-pointer hover:opacity-80 transition-opacity"
+            className="w-36 sm:w-52 md:w-64 cursor-pointer hover:opacity-80 transition-opacity"
             onClick={scrollToTop}
           >
             <img
@@ -108,22 +108,22 @@ export default function Home() {
           </div>
 
           {/* Contact Icons - aligned to content right edge */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 mr-10 sm:mr-12 md:mr-14">
             <a
               href="mailto:thebedouins.ai@gmail.com"
-              className="p-2 rounded-full bg-background/10 backdrop-blur-sm border border-primary/20 hover:bg-primary/10 transition-all duration-300"
+              className="p-1.5 sm:p-2 rounded-full bg-background/10 backdrop-blur-sm border border-primary/20 hover:bg-primary/10 transition-all duration-300"
               aria-label="Email us"
             >
-              <Mail className="w-5 h-5 text-primary" />
+              <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
             </a>
             <a
               href="https://wa.me/972545534560"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-full bg-background/10 backdrop-blur-sm border border-primary/20 hover:bg-primary/10 transition-all duration-300"
+              className="p-1.5 sm:p-2 rounded-full bg-background/10 backdrop-blur-sm border border-primary/20 hover:bg-primary/10 transition-all duration-300"
               aria-label="WhatsApp"
             >
-              <MessageCircle className="w-5 h-5 text-primary" />
+              <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
             </a>
           </div>
         </div>
@@ -132,7 +132,7 @@ export default function Home() {
       {/* Theme Toggle */}
       <button
         onClick={toggleTheme}
-        className="fixed top-6 right-4 md:right-6 z-50 p-1 rounded-full bg-background/10 backdrop-blur-sm border border-primary/20 hover:bg-primary/10 transition-all duration-300 scale-90 md:scale-100"
+        className="fixed top-4 right-3 sm:top-5 sm:right-4 md:top-6 md:right-6 z-50 p-1 rounded-full bg-background/10 backdrop-blur-sm border border-primary/20 hover:bg-primary/10 transition-all duration-300 scale-90 md:scale-100"
         aria-label="Toggle theme"
       >
         {theme === "dark" ? (
@@ -143,7 +143,7 @@ export default function Home() {
       </button>
 
       {/* Hero Section - Always Dark Background */}
-      <section className="relative min-h-screen flex flex-col items-center justify-start md:justify-center pt-16 pb-12 md:py-20 overflow-hidden bg-black w-full">
+      <section className="relative min-h-screen flex flex-col items-center justify-start md:justify-center pt-20 sm:pt-24 pb-10 sm:pb-12 md:py-20 overflow-hidden bg-black w-full">
         {/* Psychedelic Background Layer - Removed to ensure seamless black background for video
         <div 
           className="absolute inset-0 opacity-30 pointer-events-none mix-blend-screen"
@@ -161,7 +161,7 @@ export default function Home() {
           
           {/* Text Content - Left */}
           <div className="w-full lg:w-[40%] flex flex-col items-start text-left animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 pt-8 lg:pt-0">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-primary mb-6 drop-shadow-lg font-display leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-primary mb-4 sm:mb-6 drop-shadow-lg font-display leading-tight">
               Bringing Stories to Life with AI, Art and Sound
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed mb-8">
@@ -206,7 +206,7 @@ export default function Home() {
       </section>
 
       {/* Portfolio Section - Moved Up */}
-      <section id="portfolio" className="py-16 md:py-24 relative bg-background overflow-hidden">
+      <section id="portfolio" className="py-12 sm:py-16 md:py-24 relative bg-background overflow-hidden">
         {/* Psychedelic Background Layer for Dark Mode */}
         {theme === 'dark' && (
           <div 
@@ -221,11 +221,11 @@ export default function Home() {
         )}
         
         <div className="container mx-auto px-4 relative z-10">
-          <div className="mb-16 text-left">
-            <h2 className="text-5xl md:text-6xl font-black mb-4 text-primary drop-shadow-lg font-display">
+          <div className="mb-10 sm:mb-16 text-left">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black mb-4 text-primary drop-shadow-lg font-display">
               The Craft
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
               A showcase of our work, where storytelling meets precision, and technology meets emotion
             </p>
           </div>
@@ -286,7 +286,7 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section className="py-16 md:py-24 relative overflow-hidden bg-background">
+      <section className="py-12 sm:py-16 md:py-24 relative overflow-hidden bg-background">
         {/* Psychedelic Background Layer for Dark Mode */}
         {theme === 'dark' && (
           <div 
@@ -301,12 +301,12 @@ export default function Home() {
         )}
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="mb-16 text-left">
-            <h2 className="text-5xl md:text-6xl font-black mb-4 text-primary drop-shadow-lg font-display">
+          <div className="mb-10 sm:mb-16 text-left">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black mb-4 text-primary drop-shadow-lg font-display">
               Our Services
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl">
-              Not just services, but rituals of craft, designed to move, echo, and transform. This is how we shape stories the Bedouin way. 
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
+              Not just services, but rituals of craft, designed to move, echo, and transform. This is how we shape stories the Bedouin way.
             </p>
           </div>
 
@@ -345,7 +345,7 @@ export default function Home() {
       </section>
 
       {/* Team Section (Restored Hover Cards) */}
-      <section className="py-24 relative bg-background overflow-hidden">
+      <section className="py-12 sm:py-16 md:py-24 relative bg-background overflow-hidden">
         {/* Psychedelic Background Layer for Dark Mode */}
         {theme === 'dark' && (
           <div 
@@ -360,11 +360,11 @@ export default function Home() {
         )}
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="mb-16 text-left">
-            <h2 className="text-5xl md:text-6xl font-black mb-4 text-primary drop-shadow-lg font-display">
+          <div className="mb-10 sm:mb-16 text-left">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black mb-4 text-primary drop-shadow-lg font-display">
               Our Tent
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
               Five masters of their craft, united by a shared vision of creative excellence.
             </p>
           </div>
@@ -383,13 +383,13 @@ export default function Home() {
                 onMouseLeave={() => setHoveredTeamMember(null)}
               >
                 <div
-                  className={`relative h-96 rounded-2xl overflow-hidden bg-gradient-to-br ${member.gradient} p-8 flex flex-col justify-end transition-all duration-500 border border-primary/20 ${
-                    hoveredTeamMember === member.id ? "shadow-[0_0_30px_rgba(58,193,182,0.4)] scale-105" : "shadow-lg"
+                  className={`relative h-96 rounded-2xl overflow-hidden bg-gradient-to-br ${member.gradient} p-6 sm:p-8 flex flex-col justify-end transition-all duration-500 border border-primary/20 ${
+                    hoveredTeamMember === member.id ? "shadow-[0_0_30px_rgba(58,193,182,0.4)] md:scale-105" : "shadow-lg"
                   }`}
                 >
-                  {/* Team Member Image Background - Disappears on Hover */}
+                  {/* Team Member Image Background - Faded on mobile so bio shows; disappears on hover at md+ */}
                   {member.image && (
-                    <div className={`absolute inset-0 z-0 transition-opacity duration-500 ${hoveredTeamMember === member.id ? 'opacity-0' : 'opacity-100'}`}>
+                    <div className={`absolute inset-0 z-0 transition-opacity duration-500 opacity-30 ${hoveredTeamMember === member.id ? 'md:opacity-0' : 'md:opacity-100'}`}>
                       <img
                         src={member.image}
                         alt={member.name}
@@ -402,18 +402,22 @@ export default function Home() {
                       />
                     </div>
                   )}
-                  
+
                   {/* Gradient Overlay - Always present but adjusted for readability */}
-                  <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 transition-opacity duration-500 ${hoveredTeamMember === member.id ? 'opacity-100 bg-black/80' : 'opacity-100'}`} />
-                  
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
+
                   <div className="relative z-20 w-full h-full flex flex-col justify-end">
-                    <div className={`transition-all duration-500 ${hoveredTeamMember === member.id ? 'translate-y-0' : 'translate-y-0'}`}>
+                    <div>
                       <h3 className="text-xl font-bold mb-1 text-white">{member.name}</h3>
                       <p className="text-xs font-semibold text-white/90 mb-3 uppercase tracking-wide">{member.role}</p>
                     </div>
-                    
-                    {/* Description - Revealed on Hover */}
-                    <div className={`space-y-3 transition-all duration-500 overflow-hidden ${hoveredTeamMember === member.id ? 'max-h-60 opacity-100 mt-2' : 'max-h-0 opacity-0 mt-0'}`}>
+
+                    {/* Description - Always visible on mobile, revealed on hover at md+ */}
+                    <div className={`space-y-3 transition-all duration-500 overflow-hidden max-h-60 opacity-100 mt-2 ${
+                      hoveredTeamMember === member.id
+                        ? "md:max-h-60 md:opacity-100 md:mt-2"
+                        : "md:max-h-0 md:opacity-0 md:mt-0"
+                    }`}>
                       <p className="text-sm text-white/95 leading-relaxed font-medium">{member.bio}</p>
                       <div className="flex flex-wrap gap-2 pt-2">
                         {member.expertise.map((exp, i) => (
@@ -436,13 +440,13 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-16 md:py-24 relative bg-background overflow-hidden"> <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center space-y-12">
-            <div className="space-y-6">
-              <h2 className="text-5xl md:text-6xl font-black text-primary drop-shadow-lg font-display">
+      <section id="contact" className="py-12 sm:py-16 md:py-24 relative bg-background overflow-hidden"> <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-4xl mx-auto text-center space-y-8 sm:space-y-12">
+            <div className="space-y-4 sm:space-y-6">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-primary drop-shadow-lg font-display">
                 Let's Create Magic
               </h2>
-              <p className="text-xl text-muted-foreground">
+              <p className="text-base sm:text-xl text-muted-foreground">
                 Ready to bring your vision to life? Step into our tent.
               </p>
             </div>
