@@ -94,10 +94,10 @@ export default function Home() {
     <div className="min-h-screen flex flex-col relative overflow-x-hidden transition-colors duration-300">
       {/* Sticky Header Bar */}
       <div className="fixed top-0 left-0 right-0 z-40 h-16 sm:h-20 md:h-24 bg-background/80 backdrop-blur-md border-b border-primary/20 shadow-lg transition-all duration-300">
-        <div className="container mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
-          {/* Logo Container - Increased Size */}
+        <div className="container mx-auto px-3 sm:px-4 h-full relative flex items-center md:justify-between">
+          {/* Logo Container - absolutely centered on mobile, normal flow on md+ */}
           <div
-            className="w-36 sm:w-52 md:w-64 cursor-pointer hover:opacity-80 transition-opacity"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:translate-x-0 md:translate-y-0 w-36 sm:w-52 md:w-64 cursor-pointer hover:opacity-80 transition-opacity"
             onClick={scrollToTop}
           >
             <img
@@ -107,8 +107,8 @@ export default function Home() {
             />
           </div>
 
-          {/* Contact Icons - aligned to content right edge */}
-          <div className="flex items-center gap-2 sm:gap-3 mr-10 sm:mr-12 md:mr-14">
+          {/* Contact Icons - on the right via ml-auto on mobile; flex-justify-between handles md+ */}
+          <div className="ml-auto flex items-center gap-2 sm:gap-3 mr-10 sm:mr-12 md:mr-14">
             <a
               href="mailto:thebedouins.ai@gmail.com"
               className="p-1.5 sm:p-2 rounded-full bg-background/10 backdrop-blur-sm border border-primary/20 hover:bg-primary/10 transition-all duration-300"
@@ -197,7 +197,11 @@ export default function Home() {
               loop
               muted
               playsInline
-              className="w-full h-full object-contain relative z-10 scale-110 origin-right mix-blend-screen"
+              className="w-full h-full object-contain relative z-10 scale-125 origin-center mix-blend-screen"
+              style={{
+                maskImage: "radial-gradient(ellipse 70% 70% at center, black 50%, transparent 90%)",
+                WebkitMaskImage: "radial-gradient(ellipse 70% 70% at center, black 50%, transparent 90%)",
+              }}
             />
           </div>
         </div>
