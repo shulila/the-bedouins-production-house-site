@@ -94,10 +94,10 @@ export default function Home() {
     <div className="min-h-screen flex flex-col relative overflow-x-hidden transition-colors duration-300">
       {/* Sticky Header Bar */}
       <div className="fixed top-0 left-0 right-0 z-40 h-16 sm:h-20 md:h-24 bg-background/80 backdrop-blur-md border-b border-primary/20 shadow-lg transition-all duration-300">
-        <div className="container mx-auto px-3 sm:px-4 h-full relative flex items-center md:justify-between">
-          {/* Logo Container - absolutely centered on mobile, normal flow on md+ */}
+        <div className="container mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
+          {/* Logo Container - aligned to container left edge (matches content alignment) */}
           <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:translate-x-0 md:translate-y-0 w-36 sm:w-52 md:w-64 cursor-pointer hover:opacity-80 transition-opacity"
+            className="w-32 sm:w-44 md:w-64 cursor-pointer hover:opacity-80 transition-opacity"
             onClick={scrollToTop}
           >
             <img
@@ -107,10 +107,12 @@ export default function Home() {
             />
           </div>
 
-          {/* Contact Icons - on the right via ml-auto on mobile; flex-justify-between handles md+ */}
-          <div className="ml-auto flex items-center gap-2 sm:gap-3 mr-10 sm:mr-12 md:mr-14">
+          {/* Contact Icons - aligned to content right edge */}
+          <div className="flex items-center gap-2 sm:gap-3 mr-10 sm:mr-12 md:mr-14">
             <a
-              href="mailto:thebedouins.ai@gmail.com"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=thebedouins.ai@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
               className="p-1.5 sm:p-2 rounded-full bg-background/10 backdrop-blur-sm border border-primary/20 hover:bg-primary/10 transition-all duration-300"
               aria-label="Email us"
             >
@@ -197,10 +199,10 @@ export default function Home() {
               loop
               muted
               playsInline
-              className="w-full h-full object-contain relative z-10 scale-125 origin-center mix-blend-screen"
+              className="w-full h-full object-contain relative z-10 scale-[1.4] sm:scale-[1.3] md:scale-125 origin-center mix-blend-screen"
               style={{
-                maskImage: "radial-gradient(ellipse 70% 70% at center, black 50%, transparent 90%)",
-                WebkitMaskImage: "radial-gradient(ellipse 70% 70% at center, black 50%, transparent 90%)",
+                maskImage: "radial-gradient(circle at center, black 35%, transparent 72%)",
+                WebkitMaskImage: "radial-gradient(circle at center, black 35%, transparent 72%)",
               }}
             />
           </div>
@@ -309,9 +311,6 @@ export default function Home() {
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-black mb-4 text-primary drop-shadow-lg font-display">
               Our Services
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
-              Not just services, but rituals of craft, designed to move, echo, and transform. This is how we shape stories the Bedouin way.
-            </p>
           </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -391,9 +390,9 @@ export default function Home() {
                     hoveredTeamMember === member.id ? "shadow-[0_0_30px_rgba(58,193,182,0.4)] md:scale-105" : "shadow-lg"
                   }`}
                 >
-                  {/* Team Member Image Background - Faded on mobile so bio shows; disappears on hover at md+ */}
+                  {/* Team Member Image Background - full opacity on both; fades only on md+ hover */}
                   {member.image && (
-                    <div className={`absolute inset-0 z-0 transition-opacity duration-500 opacity-30 ${hoveredTeamMember === member.id ? 'md:opacity-0' : 'md:opacity-100'}`}>
+                    <div className={`absolute inset-0 z-0 transition-opacity duration-500 opacity-100 ${hoveredTeamMember === member.id ? 'md:opacity-0' : 'md:opacity-100'}`}>
                       <img
                         src={member.image}
                         alt={member.name}
@@ -407,10 +406,10 @@ export default function Home() {
                     </div>
                   )}
 
-                  {/* Gradient Overlay - Always present but adjusted for readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
+                  {/* Gradient Overlay - Dark at top on mobile (content sits at top), dark at bottom on md+ */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/40 to-transparent md:bg-gradient-to-t z-10" />
 
-                  <div className="relative z-20 w-full h-full flex flex-col justify-end">
+                  <div className="relative z-20 w-full h-full flex flex-col justify-start md:justify-end">
                     <div>
                       <h3 className="text-xl font-bold mb-1 text-white">{member.name}</h3>
                       <p className="text-xs font-semibold text-white/90 mb-3 uppercase tracking-wide">{member.role}</p>
@@ -456,38 +455,47 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <Card className="bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
-                <CardContent className="p-8 flex flex-col items-center gap-6">
-                  <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <Mail className="w-8 h-8 text-primary" />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-primary">Email Us</h3>
-                    <a href="mailto:thebedouins.ai@gmail.com" className="text-muted-foreground hover:text-primary transition-colors text-lg">
-                      thebedouins.ai@gmail.com
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
+              <a
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=thebedouins.ai@gmail.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <Card className="bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
+                  <CardContent className="p-8 flex flex-col items-center gap-6">
+                    <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Mail className="w-8 h-8 text-primary" />
+                    </div>
+                    <div className="space-y-2 text-center">
+                      <h3 className="text-xl font-bold text-primary">Email Us</h3>
+                      <span className="block text-muted-foreground group-hover:text-primary transition-colors text-lg">
+                        thebedouins.ai@gmail.com
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </a>
 
-              <Card className="bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
-                <CardContent className="p-8 flex flex-col items-center gap-6">
-                  <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <MessageCircle className="w-8 h-8 text-primary" />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-primary">WhatsApp</h3>
-                    <a 
-                      href="https://wa.me/972545534560" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-primary transition-colors text-lg"
-                    >
-                      Chat with us
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
+              <a
+                href="https://wa.me/972545534560"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <Card className="bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
+                  <CardContent className="p-8 flex flex-col items-center gap-6">
+                    <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <MessageCircle className="w-8 h-8 text-primary" />
+                    </div>
+                    <div className="space-y-2 text-center">
+                      <h3 className="text-xl font-bold text-primary">WhatsApp</h3>
+                      <span className="block text-muted-foreground group-hover:text-primary transition-colors text-lg">
+                        Chat with us
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </a>
             </div>
           </div>
         </div>
