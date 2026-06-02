@@ -406,13 +406,16 @@ export default function Home() {
                     </div>
                   )}
 
-                  {/* Gradient Overlay - Dark at top on mobile (content sits at top), dark at bottom on md+ */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/40 to-transparent md:bg-gradient-to-t z-10" />
+                  {/* Top gradient: mobile only - keeps name+role readable at the top of the card */}
+                  <div className="absolute top-0 inset-x-0 h-1/3 bg-gradient-to-b from-black/90 to-transparent z-10 md:hidden" />
 
-                  <div className="relative z-20 w-full h-full flex flex-col justify-start md:justify-end">
+                  {/* Bottom gradient: bottom-half on mobile (for bio+tags), full height on md+ (the original behavior) */}
+                  <div className="absolute bottom-0 inset-x-0 h-1/2 md:h-full bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
+
+                  <div className="relative z-20 w-full h-full flex flex-col justify-between md:justify-end">
                     <div>
                       <h3 className="text-xl font-bold mb-1 text-white">{member.name}</h3>
-                      <p className="text-xs font-semibold text-white/90 mb-3 uppercase tracking-wide">{member.role}</p>
+                      <p className="text-xs font-semibold text-white/90 uppercase tracking-wide">{member.role}</p>
                     </div>
 
                     {/* Description - Always visible on mobile, revealed on hover at md+ */}
