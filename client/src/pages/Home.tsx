@@ -97,15 +97,15 @@ export default function Home() {
       {/* Sticky Header Bar */}
       <div className="fixed top-0 left-0 right-0 z-40 h-16 sm:h-20 md:h-24 bg-background/80 backdrop-blur-md border-b border-primary/20 shadow-lg transition-all duration-300">
         <div className="container mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
-          {/* Logo Container - aligned to container left edge (matches content alignment) */}
+          {/* Logo Container - height-based sizing to fill the bar with margins */}
           <div
-            className="w-32 sm:w-44 md:w-64 cursor-pointer hover:opacity-80 transition-opacity"
+            className="h-full flex items-center cursor-pointer hover:opacity-80 transition-opacity"
             onClick={scrollToTop}
           >
             <img
               src="https://files.manuscdn.com/user_upload_by_module/session_file/116189056/BGukRTVCbgkgHLWC.png"
               alt="The Bedouins"
-              className="w-full h-auto object-contain drop-shadow-lg"
+              className="h-14 sm:h-16 md:h-20 w-auto object-contain drop-shadow-lg"
             />
           </div>
 
