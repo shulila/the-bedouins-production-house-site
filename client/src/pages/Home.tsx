@@ -32,15 +32,6 @@ export default function Home() {
     imageScale?: number;
   }> = [
     {
-      id: "nimrod",
-      name: "Nimrod Reshef",
-      role: "Director",
-      bio: "Visionary storyteller with decades of experience in directing and visual narrative design. Brings cinematic excellence to every frame.",
-      expertise: ["Directing", "Storyboarding", "Visual Narrative"],
-      gradient: "from-[#3abfb5] to-[#2a9d94]",
-      image: "/images/nimrod-turquoise.png"
-    },
-    {
       id: "shila",
       name: "Shilla Bahar",
       role: "Founder, AI Creator & Designer",
@@ -48,6 +39,15 @@ export default function Home() {
       expertise: ["Founder", "AI Creation", "Visual Design"],
       gradient: "from-[#3abfb5] to-[#9d4edd]",
       image: "https://files.manuscdn.com/user_upload_by_module/session_file/116189056/fORmGJnVKqsSfmjD.png"
+    },
+    {
+      id: "nimrod",
+      name: "Nimrod Reshef",
+      role: "Director",
+      bio: "Visionary storyteller with decades of experience in directing and visual narrative design. Brings cinematic excellence to every frame.",
+      expertise: ["Directing", "Storyboarding", "Visual Narrative"],
+      gradient: "from-[#3abfb5] to-[#2a9d94]",
+      image: "/images/nimrod-turquoise.png"
     },
     {
       id: "ella",
@@ -65,7 +65,8 @@ export default function Home() {
       bio: "Master of sonic landscapes. Creates immersive soundscapes and original compositions that elevate every project.",
       expertise: ["Composition", "Sound Design", "Engineering"],
       gradient: "from-[#df6924] to-[#c5581b]",
-      image: "/images/yaron-orange.png"
+      image: "/images/yaron-orange.png",
+      imageScale: 1.08,
     },
     {
       id: "gal",
@@ -75,17 +76,18 @@ export default function Home() {
       expertise: ["Visual Content", "Production", "Accessibility"],
       gradient: "from-[#d946ef] to-[#a21caf]",
       image: "/images/gal-magenta.png",
+      imageScale: 0.92,
     },
   ];
 
   const portfolioProjects: Array<{ src: string; title: string; subtitle: string }> = [
     { src: "/videos/arlozorov-final.mp4", title: "Arlozorov", subtitle: "Competition Entry" },
-    { src: "/videos/ai-1.mp4", title: "AI Visual 01", subtitle: "Generative AI" },
+    { src: "/videos/ai-6.mp4", title: "AI Visual 06", subtitle: "Generative AI" },
     { src: "/videos/ai-2.mp4", title: "AI Visual 02", subtitle: "Generative AI" },
     { src: "/videos/ai-3.mp4", title: "AI Visual 03", subtitle: "Generative AI" },
-    { src: "/videos/ai-4.mp4", title: "AI Visual 04", subtitle: "Generative AI" },
     { src: "/videos/ai-5.mp4", title: "AI Visual 05", subtitle: "Generative AI" },
-    { src: "/videos/ai-6.mp4", title: "AI Visual 06", subtitle: "Generative AI" },
+    { src: "/videos/ai-4.mp4", title: "AI Visual 04", subtitle: "Generative AI" },
+    { src: "/videos/ai-1.mp4", title: "AI Visual 01", subtitle: "Generative AI" },
   ];
 
   if (!mounted) return null;
