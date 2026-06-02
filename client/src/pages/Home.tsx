@@ -81,13 +81,13 @@ export default function Home() {
   ];
 
   const portfolioProjects: Array<{ src: string; title: string; subtitle: string }> = [
-    { src: "/videos/arlozorov-final.mp4", title: "Arlozorov", subtitle: "Competition Entry" },
-    { src: "/videos/ai-6.mp4", title: "AI Visual 06", subtitle: "Generative AI" },
-    { src: "/videos/ai-2.mp4", title: "AI Visual 02", subtitle: "Generative AI" },
-    { src: "/videos/ai-3.mp4", title: "AI Visual 03", subtitle: "Generative AI" },
-    { src: "/videos/ai-5.mp4", title: "AI Visual 05", subtitle: "Generative AI" },
-    { src: "/videos/ai-4.mp4", title: "AI Visual 04", subtitle: "Generative AI" },
-    { src: "/videos/ai-1.mp4", title: "AI Visual 01", subtitle: "Generative AI" },
+    { src: "/videos/arlozorov-final.mp4", title: "Who Killed Arlozorov", subtitle: "Educational Visual Experience" },
+    { src: "/videos/ai-6.mp4", title: "Motion Graphics", subtitle: "Brand Animation" },
+    { src: "/videos/ai-2.mp4", title: "Animated Worlds Beyond Reality", subtitle: "AI Worldbuilding" },
+    { src: "/videos/ai-3.mp4", title: "Experimental Visual Experiences", subtitle: "Visual Innovation" },
+    { src: "/videos/ai-5.mp4", title: "Historical Reconstructions", subtitle: "Visual Reenactments" },
+    { src: "/videos/ai-4.mp4", title: "AI Cinematic Storytelling", subtitle: "Generative Cinema" },
+    { src: "/videos/ai-1.mp4", title: "Creative Concepts", subtitle: "AI Visual Studies" },
   ];
 
   if (!mounted) return null;
