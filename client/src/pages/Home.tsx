@@ -94,6 +94,18 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden transition-colors duration-300">
+      {/* Hidden SVG filter: chroma-keys pure black out of the camel video so it can sit on a light hero in light theme */}
+      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+        <defs>
+          <filter id="hide-black-pixels">
+            <feColorMatrix
+              type="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  3 3 3 0 -0.5"
+            />
+          </filter>
+        </defs>
+      </svg>
+
       {/* Sticky Header Bar */}
       <div className="fixed top-0 left-0 right-0 z-40 h-16 sm:h-20 md:h-24 bg-background/80 backdrop-blur-md border-b border-primary/20 shadow-lg transition-all duration-300">
         <div className="container mx-auto px-3 sm:px-4 h-full flex items-center justify-between">
@@ -105,12 +117,12 @@ export default function Home() {
             <img
               src="https://files.manuscdn.com/user_upload_by_module/session_file/116189056/BGukRTVCbgkgHLWC.png"
               alt="The Bedouins"
-              className="h-14 sm:h-16 md:h-20 w-auto object-contain drop-shadow-lg"
+              className="h-10 sm:h-12 md:h-14 w-auto object-contain drop-shadow-lg"
             />
           </div>
 
-          {/* Contact Icons - aligned to content right edge */}
-          <div className="flex items-center gap-2 sm:gap-3 mr-10 sm:mr-12 md:mr-14">
+          {/* Icons cluster: Mail + WhatsApp + Theme Toggle, all same size, equal spacing */}
+          <div className="flex items-center gap-2 sm:gap-3">
             <a
               href="https://mail.google.com/mail/?view=cm&fs=1&to=thebedouins.ai@gmail.com"
               target="_blank"
@@ -129,25 +141,23 @@ export default function Home() {
             >
               <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
             </a>
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 sm:p-2 rounded-full bg-background/10 backdrop-blur-sm border border-primary/20 hover:bg-primary/10 transition-all duration-300"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+              ) : (
+                <Moon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+              )}
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Theme Toggle */}
-      <button
-        onClick={toggleTheme}
-        className="fixed top-4 right-3 sm:top-5 sm:right-4 md:top-6 md:right-6 z-50 p-1 rounded-full bg-background/10 backdrop-blur-sm border border-primary/20 hover:bg-primary/10 transition-all duration-300 scale-90 md:scale-100"
-        aria-label="Toggle theme"
-      >
-        {theme === "dark" ? (
-          <Sun className="w-3.5 h-3.5 text-primary" />
-        ) : (
-          <Moon className="w-3.5 h-3.5 text-primary" />
-        )}
-      </button>
-
-      {/* Hero Section - Always Dark Background */}
-      <section className="relative min-h-screen flex flex-col items-center justify-start md:justify-center pt-20 sm:pt-24 pb-10 sm:pb-12 md:py-20 overflow-hidden bg-black w-full">
+      {/* Hero Section - theme-respecting background */}
+      <section className={`relative min-h-screen flex flex-col items-center justify-start md:justify-center pt-20 sm:pt-24 pb-10 sm:pb-12 md:py-20 overflow-x-hidden w-full ${theme === 'dark' ? 'bg-black' : 'bg-background'}`}>
         {/* Psychedelic Background Layer - Removed to ensure seamless black background for video
         <div 
           className="absolute inset-0 opacity-30 pointer-events-none mix-blend-screen"
@@ -201,10 +211,11 @@ export default function Home() {
               loop
               muted
               playsInline
-              className="w-full h-full object-contain relative z-10 scale-[1.4] sm:scale-[1.3] md:scale-125 origin-center mix-blend-screen"
+              className={`w-full h-full object-contain relative z-10 scale-[1.4] sm:scale-[1.3] md:scale-125 origin-center ${theme === 'dark' ? 'mix-blend-screen' : ''}`}
               style={{
                 maskImage: "radial-gradient(circle at center, black 35%, transparent 72%)",
                 WebkitMaskImage: "radial-gradient(circle at center, black 35%, transparent 72%)",
+                ...(theme === 'light' && { filter: 'url(#hide-black-pixels)' }),
               }}
             />
           </div>
@@ -243,11 +254,10 @@ export default function Home() {
             <Card className="col-span-1 md:col-span-2 lg:col-span-3 bg-black/40 border-primary/30 overflow-hidden group hover:border-primary/60 transition-all duration-500 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
               <div className="relative aspect-video w-full bg-black overflow-hidden">
                 <iframe
-                  src="https://www.youtube.com/embed/vqB3MhYCFuM?si=featured-project&controls=0&showinfo=0&rel=0&modestbranding=1&autoplay=1&mute=1&loop=1&playlist=vqB3MhYCFuM"
+                  src="https://www.youtube-nocookie.com/embed/vqB3MhYCFuM?controls=0&rel=0&modestbranding=1&autoplay=1&mute=1&loop=1&playsinline=1&playlist=vqB3MhYCFuM"
                   className="absolute inset-0 w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allow="autoplay; encrypted-media; picture-in-picture"
                   allowFullScreen
-                  loading="lazy"
                   title="ARI'S KNIFE - Featured Project"
                 />
               </div>
