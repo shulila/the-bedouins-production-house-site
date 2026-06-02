@@ -171,7 +171,7 @@ export default function Home() {
         */}
         
         {/* Content Container */}
-        <div className="container mx-auto px-4 relative z-10 w-full h-full flex flex-col-reverse lg:flex-row items-center justify-between gap-0 lg:gap-16">
+        <div className="container mx-auto px-4 relative z-10 w-full lg:h-full flex flex-col-reverse lg:flex-row items-center justify-between gap-0 lg:gap-16">
           
           {/* Text Content - Left */}
           <div className="w-full lg:w-[40%] flex flex-col items-start text-left animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 pt-8 lg:pt-0">
