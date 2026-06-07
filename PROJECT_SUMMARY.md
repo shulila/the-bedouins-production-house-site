@@ -277,7 +277,7 @@
 │   │   ├── sitemap.xml (NEW)
 │   │   ├── robots.txt (NEW)
 │   │   └── images/
-│   │       ├── favicon-camel.png
+│   │       ├── favicon-camel-v2.png
 │   │       └── logo.png
 │   ├── src/
 │   │   ├── pages/
