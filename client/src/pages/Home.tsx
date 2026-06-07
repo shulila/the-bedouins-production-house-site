@@ -75,7 +75,7 @@ export default function Home() {
       bio: "Specializing in visual content development, production, and digital accessibility through the integration of technology and AI tools.",
       expertise: ["Visual Content", "Production", "Accessibility"],
       gradient: "from-[#d946ef] to-[#a21caf]",
-      image: "/images/gal-magenta-v2.png",
+      image: "/images/gal-magenta-v3.png",
     },
   ];
 
