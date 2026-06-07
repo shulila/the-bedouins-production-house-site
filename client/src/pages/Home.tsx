@@ -75,8 +75,7 @@ export default function Home() {
       bio: "Specializing in visual content development, production, and digital accessibility through the integration of technology and AI tools.",
       expertise: ["Visual Content", "Production", "Accessibility"],
       gradient: "from-[#d946ef] to-[#a21caf]",
-      image: "/images/gal-magenta.png",
-      imageScale: 0.92,
+      image: "/images/gal-magenta-v2.png",
     },
   ];
 
@@ -182,19 +181,19 @@ export default function Home() {
               We are The Bedouins - a premium creative studio blending cutting-edge AI with world-class design, sound, and storytelling. From short films to commercials and beyond, we turn ideas into immersive visual experiences.
             </p>
             
-            {/* Buttons - Left Aligned */}
-            <div className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
-              <Button 
+            {/* Buttons - side-by-side on mobile too, so both sit above the fold */}
+            <div className="flex flex-row gap-3 sm:gap-6 w-full sm:w-auto">
+              <Button
                 size="lg"
-                className="bg-[#3abfb5] hover:bg-[#3abfb5] text-black font-bold px-8 py-6 text-lg rounded-full shadow-[0_0_20px_rgba(58,193,182,0.4)] hover:shadow-[0_0_30px_rgba(58,193,182,0.6)] transition-all duration-300 hover:scale-105 border-none w-full sm:w-auto"
+                className="bg-[#3abfb5] hover:bg-[#3abfb5] text-black font-bold px-4 sm:px-8 py-5 sm:py-6 text-base sm:text-lg rounded-full shadow-[0_0_20px_rgba(58,193,182,0.4)] hover:shadow-[0_0_30px_rgba(58,193,182,0.6)] transition-all duration-300 hover:scale-105 border-none flex-1 sm:flex-initial"
                 onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 View Our Work
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="lg"
-                className="border-[#3abfb5] text-[#3abfb5] hover:bg-[#3abfb5]/10 px-8 py-6 text-lg rounded-full shadow-[0_0_15px_rgba(58,193,182,0.2)] hover:shadow-[0_0_25px_rgba(58,193,182,0.4)] transition-all duration-300 hover:scale-105 bg-transparent w-full sm:w-auto"
+                className="border-[#3abfb5] text-[#3abfb5] hover:bg-[#3abfb5]/10 px-4 sm:px-8 py-5 sm:py-6 text-base sm:text-lg rounded-full shadow-[0_0_15px_rgba(58,193,182,0.2)] hover:shadow-[0_0_25px_rgba(58,193,182,0.4)] transition-all duration-300 hover:scale-105 bg-transparent flex-1 sm:flex-initial"
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 Start a Project
