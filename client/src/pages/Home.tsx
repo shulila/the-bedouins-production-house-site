@@ -252,12 +252,15 @@ export default function Home() {
             {/* Featured Project Video Card */}
             <Card className="col-span-1 md:col-span-2 lg:col-span-3 bg-black/40 border-primary/30 overflow-hidden group hover:border-primary/60 transition-all duration-500 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
               <div className="relative aspect-video w-full bg-black overflow-hidden">
-                <iframe
-                  src="https://www.youtube-nocookie.com/embed/vqB3MhYCFuM?controls=0&rel=0&modestbranding=1&autoplay=1&mute=1&loop=1&playsinline=1&playlist=vqB3MhYCFuM"
-                  className="absolute inset-0 w-full h-full"
-                  allow="autoplay; encrypted-media; picture-in-picture"
-                  allowFullScreen
-                  title="ARI'S KNIFE - Featured Project"
+                <video
+                  src="/videos/showreel.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  controls
+                  preload="metadata"
+                  className="absolute inset-0 w-full h-full object-cover"
                 />
               </div>
               <CardContent className="p-6 relative z-10 bg-background/80 backdrop-blur-md">
