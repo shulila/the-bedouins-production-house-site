@@ -64,7 +64,7 @@ export default function Home() {
       role: "Sound Designer & Composer",
       bio: "Master of sonic landscapes. Creates immersive soundscapes and original compositions that elevate every project.",
       expertise: ["Composition", "Sound Design", "Engineering"],
-      gradient: "from-[#df6924] to-[#c5581b]",
+      gradient: "from-[#ff9500] to-[#c86b00]",
       image: "/images/yaron-orange.png",
       imageScale: 1.08,
     },
@@ -81,6 +81,7 @@ export default function Home() {
 
   const portfolioProjects: Array<{ src: string; title: string; subtitle: string }> = [
     { src: "/videos/arlozorov-final.mp4", title: "Who Killed Arlozorov", subtitle: "Educational Visual Experience" },
+    { src: "/videos/ben-gurion-4-web.mp4", title: "Ben-Gurion", subtitle: "Historical Character Study" },
     { src: "/videos/ai-6.mp4", title: "Motion Graphics", subtitle: "Brand Animation" },
     { src: "/videos/ai-2.mp4", title: "Animated Worlds Beyond Reality", subtitle: "AI Worldbuilding" },
     { src: "/videos/ai-3.mp4", title: "Experimental Visual Experiences", subtitle: "Visual Innovation" },
@@ -286,10 +287,8 @@ export default function Home() {
                   <div className="relative aspect-video bg-black overflow-hidden">
                     <video
                       src={project.src}
-                      autoPlay
-                      loop
-                      muted
                       playsInline
+                      controls
                       preload="metadata"
                       className="absolute inset-0 w-full h-full object-cover"
                     />

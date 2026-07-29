@@ -17,7 +17,7 @@
 
 **Key Differentiators:**
 - Hybrid AI + human creative team
-- World-class sound design (Yaron Bachar)
+- World-class sound design (Yaron Bahar)
 - Cutting-edge AI animation capabilities
 - Premium storytelling and visual experiences
 
@@ -26,9 +26,10 @@
 ## Team Members
 
 1. **Nimrod Reshef** - Director
-2. **Yaron Bachar** - Composer/Sound Designer
-3. **Ella Tern** - AI Animator
-4. **Sheila** - (Role TBD)
+2. **Yaron Bahar** - Composer/Sound Designer
+3. **Ella Taran** - AI Animator
+4. **Shilla Bahar** - Founder, AI Creator & Designer
+5. **Gal Ziv** - Content Creator, Entrepreneur & Producer
 
 ---
 
@@ -102,27 +103,18 @@
 ### Team Section
 - Team member profiles with photos and roles
 
-### Chat Widget
-- **Status:** Currently enabled (Lemon Slice widget)
-- **Issue:** Insufficient balance error (agent_12ff4ade9b737ec7)
-- **Location:** Fixed button on bottom-right
-- **Problem:** Consuming credits unnecessarily
+### Contact CTA
+- **Status:** Email and WhatsApp links are active
+- **Location:** Header icons and contact section
+- **Current phone link:** +972-54-5534560
 
 ---
 
 ## Known Issues & Decisions
 
-### 1. Chat Widget Credit Consumption
-**Issue:** Lemon Slice widget showing "Insufficient balance" error  
-**Root Cause:** Widget attempts to fetch agent data when page loads, consuming credits even when not used  
-**Attempted Solutions:**
-- Version eb90096a: Complete removal (successful but user wanted rollback)
-- Version 824b8b24: Kept widget with controls (current state after rollback)
-
-**Pending Decision:** User to choose between:
-- Option A: Remove widget completely (save credits)
-- Option B: Replace with free alternative (WhatsApp button, contact form)
-- Option C: Keep but disable auto-load
+### 1. Contact CTA
+**Status:** Resolved with direct Email and WhatsApp contact paths.  
+**Current implementation:** Header icons and the contact section route visitors directly to email or WhatsApp.
 
 ### 2. Desktop Layout Overlap (FIXED)
 **Issue:** Animation was overlapping with headline text on desktop  
@@ -198,7 +190,7 @@
 | Version | Date | Changes | Status |
 |---------|------|---------|--------|
 | 808604f9 | 2026-02-09 | Rollback to 824b8b24 | Current |
-| eb90096a | 2026-02-09 | Removed widget completely | Rolled back |
+| eb90096a | 2026-02-09 | Removed third-party contact service | Rolled back |
 | 88490553 | 2026-02-09 | Added sitemap.xml & robots.txt | Superseded |
 | 824b8b24 | 2026-02-09 | Fixed desktop overlap (animation moved right) | Restored |
 | 27fc7508 | 2026-02-09 | Initial layout adjustments | Superseded |
@@ -209,13 +201,13 @@
 ## Next Steps (Priority Order)
 
 ### Immediate (This Session)
-1. **Decide on Chat Widget:**
-   - Remove completely, OR
-   - Replace with WhatsApp button, OR
-   - Replace with contact form
+1. **Portfolio and Video Controls:**
+   - Add the Ben-Gurion video to the portfolio
+   - Add native player controls to portfolio examples
+   - Keep the hero logo animation decorative and control-free
 
-2. **Fix Credit Consumption:**
-   - Implement chosen solution above
+2. **Contact Path QA:**
+   - Verify email and WhatsApp links
 
 ### Short Term (Next Session)
 1. **Content Replacement:**
@@ -254,7 +246,7 @@
 
 ## Important Notes for Next Session
 
-1. **Widget Issue:** The Lemon Slice widget is currently causing errors due to insufficient balance. This needs to be resolved before publishing.
+1. **Contact CTA:** Direct Email and WhatsApp links are active. Keep contact routes simple.
 
 2. **Placeholder Content:** The site currently has Lorem Ipsum and generic text. Real content is critical for SEO and conversions.
 
@@ -264,7 +256,7 @@
    - bedouinsph-lwtxgd7j.manus.space
    - thebedouins-ai.manus.space
 
-5. **Publishing Ready:** Once the widget issue is resolved and content is updated, the site is ready to publish.
+5. **Publishing Ready:** Once current content and video updates are verified, the site is ready to publish.
 
 ---
 
@@ -287,7 +279,7 @@
 │   │   ├── App.tsx
 │   │   ├── main.tsx
 │   │   └── index.css (Global styles & theme)
-│   └── index.html (Contains widget code)
+│   └── index.html (HTML entry point and SEO metadata)
 ├── server/ (Placeholder - not used)
 ├── shared/ (Placeholder - not used)
 └── package.json
