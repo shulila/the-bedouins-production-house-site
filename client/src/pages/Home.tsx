@@ -8,6 +8,7 @@ const CONTACT_EMAIL = "thebedouins.ai@gmail.com";
 const GMAIL_COMPOSE_URL = `https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACT_EMAIL}`;
 const CONTACT_FORM_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
 const WHATSAPP_URL = "https://wa.me/972545534560";
+const INTRO_SOUND_URL = "/audio/intro-logo-sound.mp3?v=2";
 const CAPTIONS_ENABLED = false;
 const EAGER_PROJECT_VIDEO_IDS = ["showreel", "arlozorov", "ben-gurion"];
 const DEFAULT_CONTACT_FORM = {
@@ -65,6 +66,7 @@ export default function Home() {
   const [contactForm, setContactForm] = useState<ContactFormState>(DEFAULT_CONTACT_FORM);
   const [contactStatus, setContactStatus] = useState("");
   const [isContactSubmitting, setIsContactSubmitting] = useState(false);
+  const [showIntroSoundPrompt, setShowIntroSoundPrompt] = useState(false);
   const introSoundRef = useRef<HTMLAudioElement | null>(null);
   const introSoundPlayedRef = useRef(false);
   const projectVideoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
@@ -74,48 +76,53 @@ export default function Home() {
     setMounted(true);
   }, []);
 
+  const playIntroSound = async (showPromptOnBlock = true) => {
+    const audio = introSoundRef.current;
+    if (!audio || introSoundPlayedRef.current) return false;
+
+    try {
+      audio.currentTime = 0;
+      audio.volume = 0.75;
+      await audio.play();
+      introSoundPlayedRef.current = true;
+      setShowIntroSoundPrompt(false);
+      return true;
+    } catch {
+      if (showPromptOnBlock) {
+        setShowIntroSoundPrompt(true);
+      }
+      return false;
+    }
+  };
+
   useEffect(() => {
     if (!mounted) return;
 
     const events: Array<keyof WindowEventMap> = ["pointerdown", "touchstart", "click", "keydown"];
-    let playInProgress = false;
+    let listenerActive = true;
 
     const removeFallbackListeners = () => {
+      if (!listenerActive) return;
+      listenerActive = false;
       events.forEach((eventName) => {
-        window.removeEventListener(eventName, handleFirstInteraction);
+        window.removeEventListener(eventName, handleFirstInteraction, true);
       });
     };
 
-    const playIntroSound = async () => {
-      const audio = introSoundRef.current;
-      if (!audio || introSoundPlayedRef.current || playInProgress) return;
-
-      playInProgress = true;
-      try {
-        audio.currentTime = 0;
-        audio.volume = 0.75;
-        await audio.play();
-        introSoundPlayedRef.current = true;
+    async function handleFirstInteraction() {
+      const played = await playIntroSound(false);
+      if (played) {
         removeFallbackListeners();
-      } catch {
-        playInProgress = false;
       }
-    };
-
-    function handleFirstInteraction() {
-      void playIntroSound();
     }
 
     events.forEach((eventName) => {
-      window.addEventListener(eventName, handleFirstInteraction, { passive: true });
+      window.addEventListener(eventName, handleFirstInteraction, { capture: true, passive: true });
     });
 
-    const fallbackTimer = window.setTimeout(removeFallbackListeners, 8000);
-
-    void playIntroSound();
+    void playIntroSound(true);
 
     return () => {
-      window.clearTimeout(fallbackTimer);
       removeFallbackListeners();
     };
   }, [mounted]);
@@ -557,7 +564,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col relative overflow-x-hidden transition-colors duration-300">
       <audio
         ref={introSoundRef}
-        src="/audio/intro-logo-sound.mp3"
+        src={INTRO_SOUND_URL}
         preload="auto"
         aria-hidden="true"
       />
@@ -669,7 +676,7 @@ export default function Home() {
             <div className="flex flex-row gap-3 sm:gap-6 w-full sm:w-auto">
               <Button
                 size="lg"
-                className="bg-[#3abfb5] hover:bg-[#3abfb5] text-black font-bold px-4 sm:px-8 py-5 sm:py-6 text-base sm:text-lg rounded-full shadow-[0_0_20px_rgba(58,193,182,0.4)] hover:shadow-[0_0_30px_rgba(58,193,182,0.6)] transition-all duration-300 hover:scale-105 border-none flex-1 sm:flex-initial"
+                className="bg-[#3abfb5] hover:bg-[#3abfb5] text-black font-display font-semibold px-4 sm:px-8 py-5 sm:py-6 text-base sm:text-lg rounded-full shadow-[0_0_20px_rgba(58,193,182,0.4)] hover:shadow-[0_0_30px_rgba(58,193,182,0.6)] transition-all duration-300 hover:scale-105 border-none flex-1 sm:flex-initial"
                 onClick={() => scrollToSection("portfolio")}
               >
                 View Our Work
@@ -677,7 +684,7 @@ export default function Home() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-[#3abfb5] text-[#3abfb5] hover:bg-[#3abfb5]/10 px-4 sm:px-8 py-5 sm:py-6 text-base sm:text-lg rounded-full shadow-[0_0_15px_rgba(58,193,182,0.2)] hover:shadow-[0_0_25px_rgba(58,193,182,0.4)] transition-all duration-300 hover:scale-105 bg-transparent flex-1 sm:flex-initial"
+                className="border-[#3abfb5] text-[#3abfb5] hover:bg-[#3abfb5]/10 px-4 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-display font-semibold rounded-full shadow-[0_0_15px_rgba(58,193,182,0.2)] hover:shadow-[0_0_25px_rgba(58,193,182,0.4)] transition-all duration-300 hover:scale-105 bg-transparent flex-1 sm:flex-initial"
                 onClick={() => scrollToSection("contact")}
               >
                 Start a Project
@@ -701,6 +708,16 @@ export default function Home() {
                 ...(theme === 'light' && { filter: 'url(#hide-black-pixels)' }),
               }}
             />
+            {showIntroSoundPrompt && (
+              <button
+                type="button"
+                onClick={() => void playIntroSound(true)}
+                className="absolute right-3 bottom-3 z-20 w-11 h-11 rounded-full border border-primary/40 bg-black/60 backdrop-blur-md flex items-center justify-center text-primary shadow-[0_0_18px_rgba(58,193,182,0.25)] hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all duration-300"
+                aria-label="Play intro sound"
+              >
+                <Volume2 className="w-5 h-5" />
+              </button>
+            )}
           </div>
         </div>
 
@@ -828,7 +845,7 @@ export default function Home() {
                 <p className="text-sm font-sans font-medium text-primary/80 mb-2">
                   From brief to finished film
                 </p>
-                <h3 className="text-xl sm:text-2xl font-sans font-medium leading-snug text-primary">
+                <h3 className="text-2xl font-display font-semibold leading-snug text-primary">
                   A lean production path, built for cinematic outcomes.
                 </h3>
               </div>
@@ -1087,7 +1104,7 @@ export default function Home() {
                     type="submit"
                     size="lg"
                     disabled={isContactSubmitting}
-                    className="bg-[#3abfb5] hover:bg-[#3abfb5] text-black font-sans font-medium px-6 py-6 rounded-full shadow-[0_0_20px_rgba(58,193,182,0.35)] hover:shadow-[0_0_30px_rgba(58,193,182,0.55)] transition-all duration-300 border-none disabled:opacity-60"
+                    className="bg-[#3abfb5] hover:bg-[#3abfb5] text-black font-display font-semibold px-6 py-6 rounded-full shadow-[0_0_20px_rgba(58,193,182,0.35)] hover:shadow-[0_0_30px_rgba(58,193,182,0.55)] transition-all duration-300 border-none disabled:opacity-60"
                   >
                     <Send className="w-4 h-4 mr-2" />
                     {isContactSubmitting ? "Sending..." : "Send Brief"}
