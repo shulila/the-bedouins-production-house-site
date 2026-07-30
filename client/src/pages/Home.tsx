@@ -1,31 +1,72 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Mail, MessageCircle, Moon, Pause, Play, Sun, Volume2, VolumeX } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Mail, MessageCircle, Moon, Pause, Play, Send, Sun, Volume2, VolumeX } from "lucide-react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 
+const CONTACT_EMAIL = "thebedouins.ai@gmail.com";
+const GMAIL_COMPOSE_URL = `https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACT_EMAIL}`;
+const WHATSAPP_URL = "https://wa.me/972545534560";
 const INTRO_SOUND_SESSION_KEY = "bedouins-intro-sound-played";
+const CAPTIONS_ENABLED = false;
+const EAGER_PROJECT_VIDEO_IDS = ["showreel", "arlozorov", "ben-gurion"];
+const DEFAULT_CONTACT_FORM = {
+  name: "",
+  email: "",
+  projectType: "AI video / cinematic piece",
+  message: "",
+};
 const DEFAULT_PROJECT_VIDEO_STATE = {
   isMuted: true,
   isPlaying: true,
   volume: 0.75,
 };
 
+declare global {
+  interface Window {
+    dataLayer?: Array<Record<string, unknown>>;
+  }
+}
+
+type ContactFormState = typeof DEFAULT_CONTACT_FORM;
 type ProjectVideoState = typeof DEFAULT_PROJECT_VIDEO_STATE;
 type PortfolioProject = {
   id: string;
   src: string;
+  poster: string;
   title: string;
   subtitle: string;
+  captionSrc?: string;
 };
+
+const navItems = [
+  { label: "Work", target: "portfolio" },
+  { label: "Services", target: "services" },
+  { label: "Team", target: "team" },
+  { label: "Contact", target: "contact" },
+];
+
+const projectTypeOptions = [
+  "AI video / cinematic piece",
+  "Animation / motion graphics",
+  "Sound design / music",
+  "Creative direction / concept",
+  "Not sure yet",
+];
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [hoveredTeamMember, setHoveredTeamMember] = useState<string | null>(null);
   const [projectVideoStates, setProjectVideoStates] = useState<Record<string, ProjectVideoState>>({});
+  const [loadedProjectVideos, setLoadedProjectVideos] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(EAGER_PROJECT_VIDEO_IDS.map((id) => [id, true]))
+  );
+  const [contactForm, setContactForm] = useState<ContactFormState>(DEFAULT_CONTACT_FORM);
+  const [contactStatus, setContactStatus] = useState("");
   const introSoundRef = useRef<HTMLAudioElement | null>(null);
   const projectVideoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
+  const projectVideoContainerRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
     setMounted(true);
@@ -90,11 +131,30 @@ export default function Home() {
     return removeFallbackListeners;
   }, [mounted]);
 
+  const trackSiteEvent = (eventName: string, payload: Record<string, unknown> = {}) => {
+    if (typeof window === "undefined") return;
+
+    const event = {
+      event: eventName,
+      ...payload,
+    };
+
+    window.dataLayer?.push(event);
+    window.dispatchEvent(new CustomEvent("bedouins:analytics", { detail: event }));
+  };
+
   const scrollToTop = () => {
+    trackSiteEvent("navigation_click", { target: "top" });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const scrollToSection = (target: string) => {
+    trackSiteEvent("navigation_click", { target });
+    document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const toggleTheme = () => {
+    trackSiteEvent("theme_toggle", { theme: theme === "dark" ? "light" : "dark" });
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
@@ -109,6 +169,21 @@ export default function Home() {
     } else {
       delete projectVideoRefs.current[id];
     }
+  };
+
+  const setProjectVideoContainerRef = (id: string) => (node: HTMLDivElement | null) => {
+    if (node) {
+      projectVideoContainerRefs.current[id] = node;
+    } else {
+      delete projectVideoContainerRefs.current[id];
+    }
+  };
+
+  const markProjectVideoLoaded = (id: string) => {
+    setLoadedProjectVideos((current) => {
+      if (current[id]) return current;
+      return { ...current, [id]: true };
+    });
   };
 
   const updateProjectVideoState = (id: string, updates: Partial<ProjectVideoState>) => {
@@ -146,29 +221,39 @@ export default function Home() {
 
   const toggleProjectPlayback = async (id: string) => {
     const video = projectVideoRefs.current[id];
-    if (!video) return;
+    if (!video) {
+      markProjectVideoLoaded(id);
+      return;
+    }
 
     if (video.paused) {
       try {
+        markProjectVideoLoaded(id);
         await video.play();
         updateProjectVideoState(id, { isPlaying: true });
+        trackSiteEvent("video_play", { videoId: id });
       } catch {
         updateProjectVideoState(id, { isPlaying: false });
       }
     } else {
       video.pause();
       updateProjectVideoState(id, { isPlaying: false });
+      trackSiteEvent("video_pause", { videoId: id });
     }
   };
 
   const toggleProjectSound = async (id: string) => {
     const video = projectVideoRefs.current[id];
-    if (!video) return;
+    if (!video) {
+      markProjectVideoLoaded(id);
+      return;
+    }
 
     const state = getProjectVideoState(id);
     const nextMuted = !state.isMuted;
 
     if (!nextMuted) {
+      markProjectVideoLoaded(id);
       muteOtherProjectVideos(id);
       video.volume = state.volume;
       if (video.paused) {
@@ -183,6 +268,7 @@ export default function Home() {
 
     video.muted = nextMuted;
     updateProjectVideoState(id, { isMuted: nextMuted });
+    trackSiteEvent(nextMuted ? "video_mute" : "video_unmute", { videoId: id });
   };
 
   const handleProjectVolumeChange = (id: string, value: string) => {
@@ -203,6 +289,39 @@ export default function Home() {
       volume,
       isMuted: nextMuted,
     });
+
+    if (!nextMuted) {
+      trackSiteEvent("video_volume", { videoId: id, volume });
+    }
+  };
+
+  const updateContactField = (field: keyof ContactFormState, value: string) => {
+    setContactForm((current) => ({
+      ...current,
+      [field]: value,
+    }));
+    setContactStatus("");
+  };
+
+  const buildContactComposeUrl = () => {
+    const subject = `New project inquiry - ${contactForm.projectType}`;
+    const body = [
+      `Name: ${contactForm.name}`,
+      `Email: ${contactForm.email}`,
+      `Project type: ${contactForm.projectType}`,
+      "",
+      "Message:",
+      contactForm.message,
+    ].join("\n");
+
+    return `${GMAIL_COMPOSE_URL}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  const handleContactSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    trackSiteEvent("contact_form_submit", { projectType: contactForm.projectType });
+    window.open(buildContactComposeUrl(), "_blank", "noopener,noreferrer");
+    setContactStatus("Your email draft opened in a new tab.");
   };
 
   const teamMembers: Array<{
@@ -266,39 +385,61 @@ export default function Home() {
   const featuredProject: PortfolioProject = {
     id: "showreel",
     src: "/videos/showreel.mp4",
+    poster: "/images/posters/showreel.jpg",
     title: "From Script to Soul",
     subtitle: "A glimpse to a 15 minutes short film crafted from a client's script, where written story becomes living cinema",
   };
 
   const portfolioProjects: PortfolioProject[] = [
-    { id: "arlozorov", src: "/videos/arlozorov-final.mp4", title: "Who Killed Arlozorov", subtitle: "Educational Visual Experience" },
-    { id: "ben-gurion", src: "/videos/ben-gurion-4-web.mp4", title: "Ben-Gurion", subtitle: "Historical Character Study" },
-    { id: "motion-graphics", src: "/videos/ai-6.mp4", title: "Motion Graphics", subtitle: "Brand Animation" },
-    { id: "animated-worlds", src: "/videos/ai-2.mp4", title: "Animated Worlds Beyond Reality", subtitle: "AI Worldbuilding" },
-    { id: "experimental-visuals", src: "/videos/ai-3.mp4", title: "Experimental Visual Experiences", subtitle: "Visual Innovation" },
-    { id: "historical-reconstructions", src: "/videos/ai-5.mp4", title: "Historical Reconstructions", subtitle: "Visual Reenactments" },
-    { id: "ai-storytelling", src: "/videos/ai-4.mp4", title: "AI Cinematic Storytelling", subtitle: "Generative Cinema" },
-    { id: "creative-concepts", src: "/videos/ai-1.mp4", title: "Creative Concepts", subtitle: "AI Visual Studies" },
+    { id: "arlozorov", src: "/videos/arlozorov-final.mp4", poster: "/images/posters/arlozorov.jpg", title: "Who Killed Arlozorov", subtitle: "Educational Visual Experience" },
+    { id: "ben-gurion", src: "/videos/ben-gurion-4-web.mp4", poster: "/images/posters/ben-gurion.jpg", title: "Ben-Gurion", subtitle: "Historical Character Study" },
+    { id: "motion-graphics", src: "/videos/ai-6.mp4", poster: "/images/posters/motion-graphics.jpg", title: "Motion Graphics", subtitle: "Brand Animation" },
+    { id: "animated-worlds", src: "/videos/ai-2.mp4", poster: "/images/posters/animated-worlds.jpg", title: "Animated Worlds Beyond Reality", subtitle: "AI Worldbuilding" },
+    { id: "experimental-visuals", src: "/videos/ai-3.mp4", poster: "/images/posters/experimental-visuals.jpg", title: "Experimental Visual Experiences", subtitle: "Visual Innovation" },
+    { id: "historical-reconstructions", src: "/videos/ai-5.mp4", poster: "/images/posters/historical-reconstructions.jpg", title: "Historical Reconstructions", subtitle: "Visual Reenactments" },
+    { id: "ai-storytelling", src: "/videos/ai-4.mp4", poster: "/images/posters/ai-storytelling.jpg", title: "AI Cinematic Storytelling", subtitle: "Generative Cinema" },
+    { id: "creative-concepts", src: "/videos/ai-1.mp4", poster: "/images/posters/creative-concepts.jpg", title: "Creative Concepts", subtitle: "AI Visual Studies" },
   ];
 
   const renderProjectVideo = (project: PortfolioProject) => {
     const state = getProjectVideoState(project.id);
+    const isLoaded = Boolean(loadedProjectVideos[project.id]);
 
     return (
-      <div className="relative aspect-video bg-black overflow-hidden">
+      <div
+        ref={setProjectVideoContainerRef(project.id)}
+        className="relative aspect-video bg-black overflow-hidden"
+      >
+        <img
+          src={project.poster}
+          alt=""
+          loading="lazy"
+          aria-hidden="true"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+            isLoaded ? "opacity-0" : "opacity-100"
+          }`}
+        />
         <video
           ref={setProjectVideoRef(project.id)}
-          src={project.src}
-          autoPlay
+          src={isLoaded ? project.src : undefined}
+          poster={project.poster}
+          autoPlay={isLoaded}
           loop
           muted={state.isMuted}
           playsInline
-          preload="metadata"
+          preload={isLoaded ? "metadata" : "none"}
           data-project-video={project.id}
-          className="absolute inset-0 w-full h-full object-cover"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+            isLoaded ? "opacity-100" : "opacity-0"
+          }`}
+          aria-label={project.title}
           onPlay={() => updateProjectVideoState(project.id, { isPlaying: true })}
           onPause={() => updateProjectVideoState(project.id, { isPlaying: false })}
-        />
+        >
+          {CAPTIONS_ENABLED && project.captionSrc && (
+            <track kind="captions" src={project.captionSrc} srcLang="en" label="English" />
+          )}
+        </video>
 
         <div className="absolute inset-x-0 bottom-0 z-20 p-3 bg-gradient-to-t from-black/85 via-black/35 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 md:focus-within:opacity-100 transition-opacity duration-300">
           <div className="flex items-center justify-between gap-3">
@@ -340,9 +481,48 @@ export default function Home() {
   useEffect(() => {
     if (!mounted) return;
 
+    if (!("IntersectionObserver" in window)) {
+      setLoadedProjectVideos((current) => {
+        const next = { ...current };
+        Object.keys(projectVideoContainerRefs.current).forEach((id) => {
+          next[id] = true;
+        });
+        return next;
+      });
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const id = entry.target.getAttribute("data-video-container");
+          if (!id) return;
+          markProjectVideoLoaded(id);
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        rootMargin: "700px 0px",
+        threshold: 0.01,
+      }
+    );
+
+    Object.entries(projectVideoContainerRefs.current).forEach(([id, element]) => {
+      if (!element || loadedProjectVideos[id]) return;
+      element.setAttribute("data-video-container", id);
+      observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [mounted, loadedProjectVideos]);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     const frame = window.requestAnimationFrame(() => {
       Object.entries(projectVideoRefs.current).forEach(([id, video]) => {
-        if (!video) return;
+        if (!video || !loadedProjectVideos[id]) return;
 
         video.muted = getProjectVideoState(id).isMuted;
         void video.play()
@@ -352,7 +532,7 @@ export default function Home() {
     });
 
     return () => window.cancelAnimationFrame(frame);
-  }, [mounted]);
+  }, [mounted, loadedProjectVideos]);
 
   if (!mounted) return null;
 
@@ -392,23 +572,38 @@ export default function Home() {
             />
           </div>
 
+          <nav className="hidden md:flex items-center gap-1 lg:gap-2" aria-label="Primary navigation">
+            {navItems.map((item) => (
+              <button
+                key={item.target}
+                type="button"
+                onClick={() => scrollToSection(item.target)}
+                className="px-3 lg:px-4 py-2 rounded-full text-xs lg:text-sm font-condensed uppercase tracking-wide text-muted-foreground hover:text-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all duration-300"
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+
           {/* Icons cluster: Mail + WhatsApp + Theme Toggle, all same size, equal spacing */}
           <div className="flex items-center gap-2 sm:gap-3">
             <a
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=thebedouins.ai@gmail.com"
+              href={GMAIL_COMPOSE_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="p-1.5 sm:p-2 rounded-full bg-background/10 backdrop-blur-sm border border-primary/20 hover:bg-primary/10 transition-all duration-300"
               aria-label="Email us"
+              onClick={() => trackSiteEvent("contact_click", { channel: "email_header" })}
             >
               <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
             </a>
             <a
-              href="https://wa.me/972545534560"
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="p-1.5 sm:p-2 rounded-full bg-background/10 backdrop-blur-sm border border-primary/20 hover:bg-primary/10 transition-all duration-300"
               aria-label="WhatsApp"
+              onClick={() => trackSiteEvent("contact_click", { channel: "whatsapp_header" })}
             >
               <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
             </a>
@@ -458,7 +653,7 @@ export default function Home() {
               <Button
                 size="lg"
                 className="bg-[#3abfb5] hover:bg-[#3abfb5] text-black font-bold px-4 sm:px-8 py-5 sm:py-6 text-base sm:text-lg rounded-full shadow-[0_0_20px_rgba(58,193,182,0.4)] hover:shadow-[0_0_30px_rgba(58,193,182,0.6)] transition-all duration-300 hover:scale-105 border-none flex-1 sm:flex-initial"
-                onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => scrollToSection("portfolio")}
               >
                 View Our Work
               </Button>
@@ -466,7 +661,7 @@ export default function Home() {
                 variant="outline"
                 size="lg"
                 className="border-[#3abfb5] text-[#3abfb5] hover:bg-[#3abfb5]/10 px-4 sm:px-8 py-5 sm:py-6 text-base sm:text-lg rounded-full shadow-[0_0_15px_rgba(58,193,182,0.2)] hover:shadow-[0_0_25px_rgba(58,193,182,0.4)] transition-all duration-300 hover:scale-105 bg-transparent flex-1 sm:flex-initial"
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => scrollToSection("contact")}
               >
                 Start a Project
               </Button>
@@ -496,7 +691,7 @@ export default function Home() {
       </section>
 
       {/* Portfolio Section - Moved Up */}
-      <section id="portfolio" className="py-12 sm:py-16 md:py-24 relative bg-background overflow-hidden">
+      <section id="portfolio" className="scroll-mt-20 sm:scroll-mt-24 py-12 sm:py-16 md:py-24 relative bg-background overflow-hidden">
         {/* Psychedelic Background Layer for Dark Mode */}
         {theme === 'dark' && (
           <div 
@@ -557,7 +752,7 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section className="py-12 sm:py-16 md:py-24 relative overflow-hidden bg-background">
+      <section id="services" className="scroll-mt-20 sm:scroll-mt-24 py-12 sm:py-16 md:py-24 relative overflow-hidden bg-background">
         {/* Psychedelic Background Layer for Dark Mode */}
         {theme === 'dark' && (
           <div 
@@ -586,7 +781,7 @@ export default function Home() {
               },
               {
                 title: "Echo-Crafted Sound",
-                desc: "Led by one of the world’s top music producers, our sound is more than audio - it’s a voice. Each layer is composed to serve the story, stitched to its rhythm, and tailored to its emotional fabric. No templates. No stock. Just original, cinematic sound design made to fit - perfectly."
+                desc: "Led by one of the world's top music producers, our sound is more than audio - it's a voice. Each layer is composed to serve the story, stitched to its rhythm, and tailored to its emotional fabric. No templates. No stock. Just original, cinematic sound design made to fit - perfectly."
               },
               {
                 title: "Fast Track Studio",
@@ -609,11 +804,37 @@ export default function Home() {
               </Card>
             ))}
           </div>
+
+          <div className="mt-10 sm:mt-14 max-w-4xl mx-auto border border-primary/20 bg-primary/5 backdrop-blur-sm px-5 sm:px-8 py-6 sm:py-8">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div className="text-left">
+                <p className="font-condensed uppercase tracking-wide text-sm text-[#ff9500] mb-2">
+                  From brief to finished film
+                </p>
+                <h3 className="text-2xl sm:text-3xl font-bold text-primary font-display">
+                  A lean production path, built for cinematic outcomes.
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left lg:min-w-[28rem]">
+                {["Brief", "Concept", "AI / Production", "Sound & Delivery"].map((step, index) => (
+                  <div key={step} className="border-l border-primary/30 pl-3">
+                    <span className="block font-condensed text-xs uppercase tracking-wide text-muted-foreground">
+                      0{index + 1}
+                    </span>
+                    <span className="block text-sm sm:text-base font-semibold text-foreground">
+                      {step}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Team Section (Restored Hover Cards) */}
-      <section className="py-12 sm:py-16 md:py-24 relative bg-background overflow-hidden">
+      <section id="team" className="scroll-mt-20 sm:scroll-mt-24 py-12 sm:py-16 md:py-24 relative bg-background overflow-hidden">
         {/* Psychedelic Background Layer for Dark Mode */}
         {theme === 'dark' && (
           <div 
@@ -711,23 +932,116 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-12 sm:py-16 md:py-24 relative bg-background overflow-hidden"> <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center space-y-8 sm:space-y-12">
+      <section id="contact" className="scroll-mt-20 sm:scroll-mt-24 py-12 sm:py-16 md:py-24 relative bg-background overflow-hidden">
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-4xl mx-auto space-y-8 sm:space-y-12">
             <div className="space-y-4 sm:space-y-6">
               <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-primary drop-shadow-lg font-display">
                 Let's Create Magic
               </h2>
-              <p className="text-base sm:text-xl text-muted-foreground">
-                Ready to bring your vision to life? Step into our tent.
+              <p className="text-base sm:text-xl text-muted-foreground max-w-2xl">
+                Send us a script, brief, reference, or wild idea - we will shape it into a cinematic piece.
               </p>
             </div>
 
+            <form
+              onSubmit={handleContactSubmit}
+              className="border border-primary/25 bg-primary/5 backdrop-blur-sm p-5 sm:p-8 space-y-5"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="space-y-2 text-left">
+                  <label htmlFor="contact-name" className="text-sm font-semibold text-primary">
+                    Name
+                  </label>
+                  <input
+                    id="contact-name"
+                    name="name"
+                    value={contactForm.name}
+                    onChange={(event) => updateContactField("name", event.target.value)}
+                    autoComplete="name"
+                    required
+                    className="w-full bg-black/40 border border-primary/25 px-4 py-3 text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    placeholder="Your name"
+                  />
+                </div>
+
+                <div className="space-y-2 text-left">
+                  <label htmlFor="contact-email" className="text-sm font-semibold text-primary">
+                    Email
+                  </label>
+                  <input
+                    id="contact-email"
+                    name="email"
+                    type="email"
+                    value={contactForm.email}
+                    onChange={(event) => updateContactField("email", event.target.value)}
+                    autoComplete="email"
+                    required
+                    className="w-full bg-black/40 border border-primary/25 px-4 py-3 text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    placeholder="you@example.com"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2 text-left">
+                <label htmlFor="contact-project-type" className="text-sm font-semibold text-primary">
+                  Project type
+                </label>
+                <select
+                  id="contact-project-type"
+                  name="projectType"
+                  value={contactForm.projectType}
+                  onChange={(event) => updateContactField("projectType", event.target.value)}
+                  className="w-full bg-black/40 border border-primary/25 px-4 py-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  {projectTypeOptions.map((option) => (
+                    <option key={option} value={option} className="bg-black text-white">
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-2 text-left">
+                <label htmlFor="contact-message" className="text-sm font-semibold text-primary">
+                  Message
+                </label>
+                <textarea
+                  id="contact-message"
+                  name="message"
+                  value={contactForm.message}
+                  onChange={(event) => updateContactField("message", event.target.value)}
+                  required
+                  rows={5}
+                  className="w-full resize-y bg-black/40 border border-primary/25 px-4 py-3 text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  placeholder="Tell us what you want to make, what stage it is in, and any references you already have."
+                />
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="bg-[#3abfb5] hover:bg-[#3abfb5] text-black font-bold px-6 py-6 rounded-full shadow-[0_0_20px_rgba(58,193,182,0.35)] hover:shadow-[0_0_30px_rgba(58,193,182,0.55)] transition-all duration-300 border-none"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Send Brief
+                </Button>
+                {contactStatus && (
+                  <p className="text-sm text-muted-foreground" role="status">
+                    {contactStatus}
+                  </p>
+                )}
+              </div>
+            </form>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <a
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=thebedouins.ai@gmail.com"
+                href={GMAIL_COMPOSE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block"
+                onClick={() => trackSiteEvent("contact_click", { channel: "email_card" })}
               >
                 <Card className="bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
                   <CardContent className="p-8 flex flex-col items-center gap-6">
@@ -737,7 +1051,7 @@ export default function Home() {
                     <div className="space-y-2 text-center">
                       <h3 className="text-xl font-bold text-primary">Email Us</h3>
                       <span className="block text-muted-foreground group-hover:text-primary transition-colors text-lg">
-                        thebedouins.ai@gmail.com
+                        {CONTACT_EMAIL}
                       </span>
                     </div>
                   </CardContent>
@@ -745,10 +1059,11 @@ export default function Home() {
               </a>
 
               <a
-                href="https://wa.me/972545534560"
+                href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block"
+                onClick={() => trackSiteEvent("contact_click", { channel: "whatsapp_card" })}
               >
                 <Card className="bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
                   <CardContent className="p-8 flex flex-col items-center gap-6">

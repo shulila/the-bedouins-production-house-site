@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://the-bedouins-production-house.shilla-bahar.workers.dev/sitemap.xml
