@@ -6,8 +6,8 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 
 const CONTACT_EMAIL = "thebedouins.ai@gmail.com";
 const GMAIL_COMPOSE_URL = `https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACT_EMAIL}`;
+const CONTACT_FORM_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
 const WHATSAPP_URL = "https://wa.me/972545534560";
-const INTRO_SOUND_SESSION_KEY = "bedouins-intro-sound-played";
 const CAPTIONS_ENABLED = false;
 const EAGER_PROJECT_VIDEO_IDS = ["showreel", "arlozorov", "ben-gurion"];
 const DEFAULT_CONTACT_FORM = {
@@ -64,7 +64,9 @@ export default function Home() {
   );
   const [contactForm, setContactForm] = useState<ContactFormState>(DEFAULT_CONTACT_FORM);
   const [contactStatus, setContactStatus] = useState("");
+  const [isContactSubmitting, setIsContactSubmitting] = useState(false);
   const introSoundRef = useRef<HTMLAudioElement | null>(null);
+  const introSoundPlayedRef = useRef(false);
   const projectVideoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
   const projectVideoContainerRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -74,22 +76,6 @@ export default function Home() {
 
   useEffect(() => {
     if (!mounted) return;
-
-    const wasPlayed = () => {
-      try {
-        return sessionStorage.getItem(INTRO_SOUND_SESSION_KEY) === "true";
-      } catch {
-        return false;
-      }
-    };
-
-    const markPlayed = () => {
-      try {
-        sessionStorage.setItem(INTRO_SOUND_SESSION_KEY, "true");
-      } catch {
-        // Ignore storage errors; playback should still work.
-      }
-    };
 
     const events: Array<keyof WindowEventMap> = ["pointerdown", "touchstart", "click", "keydown"];
     let playInProgress = false;
@@ -102,14 +88,14 @@ export default function Home() {
 
     const playIntroSound = async () => {
       const audio = introSoundRef.current;
-      if (!audio || wasPlayed() || playInProgress) return;
+      if (!audio || introSoundPlayedRef.current || playInProgress) return;
 
       playInProgress = true;
       try {
         audio.currentTime = 0;
         audio.volume = 0.75;
         await audio.play();
-        markPlayed();
+        introSoundPlayedRef.current = true;
         removeFallbackListeners();
       } catch {
         playInProgress = false;
@@ -120,15 +106,18 @@ export default function Home() {
       void playIntroSound();
     }
 
-    if (wasPlayed()) return;
-
     events.forEach((eventName) => {
-      window.addEventListener(eventName, handleFirstInteraction, { once: true, passive: true });
+      window.addEventListener(eventName, handleFirstInteraction, { passive: true });
     });
+
+    const fallbackTimer = window.setTimeout(removeFallbackListeners, 8000);
 
     void playIntroSound();
 
-    return removeFallbackListeners;
+    return () => {
+      window.clearTimeout(fallbackTimer);
+      removeFallbackListeners();
+    };
   }, [mounted]);
 
   const trackSiteEvent = (eventName: string, payload: Record<string, unknown> = {}) => {
@@ -303,25 +292,43 @@ export default function Home() {
     setContactStatus("");
   };
 
-  const buildContactComposeUrl = () => {
-    const subject = `New project inquiry - ${contactForm.projectType}`;
-    const body = [
-      `Name: ${contactForm.name}`,
-      `Email: ${contactForm.email}`,
-      `Project type: ${contactForm.projectType}`,
-      "",
-      "Message:",
-      contactForm.message,
-    ].join("\n");
-
-    return `${GMAIL_COMPOSE_URL}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  };
-
-  const handleContactSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     trackSiteEvent("contact_form_submit", { projectType: contactForm.projectType });
-    window.open(buildContactComposeUrl(), "_blank", "noopener,noreferrer");
-    setContactStatus("Your email draft opened in a new tab.");
+    setIsContactSubmitting(true);
+    setContactStatus("Sending...");
+
+    try {
+      const response = await fetch(CONTACT_FORM_ENDPOINT, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: contactForm.name,
+          email: contactForm.email,
+          projectType: contactForm.projectType,
+          message: contactForm.message,
+          _subject: `New project inquiry - ${contactForm.projectType}`,
+          _template: "table",
+          _captcha: "false",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Contact form request failed");
+      }
+
+      trackSiteEvent("contact_form_success", { projectType: contactForm.projectType });
+      setContactForm(DEFAULT_CONTACT_FORM);
+      setContactStatus("Brief sent. We will get back to you.");
+    } catch {
+      trackSiteEvent("contact_form_error", { projectType: contactForm.projectType });
+      setContactStatus(`Could not send from the form. Please email ${CONTACT_EMAIL} or use WhatsApp.`);
+    } finally {
+      setIsContactSubmitting(false);
+    }
   };
 
   const teamMembers: Array<{
@@ -578,7 +585,7 @@ export default function Home() {
                 key={item.target}
                 type="button"
                 onClick={() => scrollToSection(item.target)}
-                className="px-3 lg:px-4 py-2 rounded-full text-xs lg:text-sm font-condensed uppercase tracking-wide text-muted-foreground hover:text-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all duration-300"
+                className="px-3 lg:px-4 py-2 rounded-full text-sm font-semibold text-primary/75 hover:text-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all duration-300"
               >
                 {item.label}
               </button>
@@ -805,13 +812,13 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="mt-10 sm:mt-14 max-w-4xl mx-auto border border-primary/20 bg-primary/5 backdrop-blur-sm px-5 sm:px-8 py-6 sm:py-8">
+          <div className="mt-10 sm:mt-14 max-w-4xl mx-auto border border-primary/30 bg-primary/5 backdrop-blur-sm px-5 sm:px-8 py-6 sm:py-8 shadow-[0_0_20px_rgba(58,193,182,0.1)]">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div className="text-left">
-                <p className="font-condensed uppercase tracking-wide text-sm text-[#ff9500] mb-2">
+                <p className="text-sm font-semibold text-primary/80 mb-2">
                   From brief to finished film
                 </p>
-                <h3 className="text-2xl sm:text-3xl font-bold text-primary font-display">
+                <h3 className="text-2xl font-bold text-primary">
                   A lean production path, built for cinematic outcomes.
                 </h3>
               </div>
@@ -819,7 +826,7 @@ export default function Home() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left lg:min-w-[28rem]">
                 {["Brief", "Concept", "AI / Production", "Sound & Delivery"].map((step, index) => (
                   <div key={step} className="border-l border-primary/30 pl-3">
-                    <span className="block font-condensed text-xs uppercase tracking-wide text-muted-foreground">
+                    <span className="block text-xs font-semibold text-primary/70">
                       0{index + 1}
                     </span>
                     <span className="block text-sm sm:text-base font-semibold text-foreground">
@@ -934,7 +941,7 @@ export default function Home() {
       {/* Contact Section */}
       <section id="contact" className="scroll-mt-20 sm:scroll-mt-24 py-12 sm:py-16 md:py-24 relative bg-background overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto space-y-8 sm:space-y-12">
+          <div className="max-w-5xl mx-auto space-y-8 sm:space-y-12">
             <div className="space-y-4 sm:space-y-6">
               <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-primary drop-shadow-lg font-display">
                 Let's Create Magic
@@ -944,141 +951,144 @@ export default function Home() {
               </p>
             </div>
 
-            <form
-              onSubmit={handleContactSubmit}
-              className="border border-primary/25 bg-primary/5 backdrop-blur-sm p-5 sm:p-8 space-y-5"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="space-y-2 text-left">
-                  <label htmlFor="contact-name" className="text-sm font-semibold text-primary">
-                    Name
-                  </label>
-                  <input
-                    id="contact-name"
-                    name="name"
-                    value={contactForm.name}
-                    onChange={(event) => updateContactField("name", event.target.value)}
-                    autoComplete="name"
-                    required
-                    className="w-full bg-black/40 border border-primary/25 px-4 py-3 text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    placeholder="Your name"
-                  />
+            <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-6 lg:gap-8 items-start">
+              <form
+                onSubmit={handleContactSubmit}
+                className="order-2 lg:order-1 border border-primary/25 bg-primary/5 backdrop-blur-sm p-5 sm:p-8 space-y-5 shadow-[0_0_20px_rgba(58,193,182,0.1)]"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="space-y-2 text-left">
+                    <label htmlFor="contact-name" className="text-sm font-semibold text-primary">
+                      Name
+                    </label>
+                    <input
+                      id="contact-name"
+                      name="name"
+                      value={contactForm.name}
+                      onChange={(event) => updateContactField("name", event.target.value)}
+                      autoComplete="name"
+                      required
+                      className="w-full bg-black/40 border border-primary/25 px-4 py-3 text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      placeholder="Your name"
+                    />
+                  </div>
+
+                  <div className="space-y-2 text-left">
+                    <label htmlFor="contact-email" className="text-sm font-semibold text-primary">
+                      Email
+                    </label>
+                    <input
+                      id="contact-email"
+                      name="email"
+                      type="email"
+                      value={contactForm.email}
+                      onChange={(event) => updateContactField("email", event.target.value)}
+                      autoComplete="email"
+                      required
+                      className="w-full bg-black/40 border border-primary/25 px-4 py-3 text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      placeholder="you@example.com"
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-2 text-left">
-                  <label htmlFor="contact-email" className="text-sm font-semibold text-primary">
-                    Email
+                  <label htmlFor="contact-project-type" className="text-sm font-semibold text-primary">
+                    Project type
                   </label>
-                  <input
-                    id="contact-email"
-                    name="email"
-                    type="email"
-                    value={contactForm.email}
-                    onChange={(event) => updateContactField("email", event.target.value)}
-                    autoComplete="email"
+                  <select
+                    id="contact-project-type"
+                    name="projectType"
+                    value={contactForm.projectType}
+                    onChange={(event) => updateContactField("projectType", event.target.value)}
+                    className="w-full bg-black/40 border border-primary/25 px-4 py-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  >
+                    {projectTypeOptions.map((option) => (
+                      <option key={option} value={option} className="bg-black text-white">
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-2 text-left">
+                  <label htmlFor="contact-message" className="text-sm font-semibold text-primary">
+                    Message
+                  </label>
+                  <textarea
+                    id="contact-message"
+                    name="message"
+                    value={contactForm.message}
+                    onChange={(event) => updateContactField("message", event.target.value)}
                     required
-                    className="w-full bg-black/40 border border-primary/25 px-4 py-3 text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    placeholder="you@example.com"
+                    rows={5}
+                    className="w-full resize-y bg-black/40 border border-primary/25 px-4 py-3 text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    placeholder="Tell us what you want to make, what stage it is in, and any references you already have."
                   />
                 </div>
-              </div>
 
-              <div className="space-y-2 text-left">
-                <label htmlFor="contact-project-type" className="text-sm font-semibold text-primary">
-                  Project type
-                </label>
-                <select
-                  id="contact-project-type"
-                  name="projectType"
-                  value={contactForm.projectType}
-                  onChange={(event) => updateContactField("projectType", event.target.value)}
-                  className="w-full bg-black/40 border border-primary/25 px-4 py-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={isContactSubmitting}
+                    className="bg-[#3abfb5] hover:bg-[#3abfb5] text-black font-bold px-6 py-6 rounded-full shadow-[0_0_20px_rgba(58,193,182,0.35)] hover:shadow-[0_0_30px_rgba(58,193,182,0.55)] transition-all duration-300 border-none disabled:opacity-60"
+                  >
+                    <Send className="w-4 h-4 mr-2" />
+                    {isContactSubmitting ? "Sending..." : "Send Brief"}
+                  </Button>
+                  {contactStatus && (
+                    <p className="text-sm text-muted-foreground" role="status">
+                      {contactStatus}
+                    </p>
+                  )}
+                </div>
+              </form>
+
+              <div className="order-1 lg:order-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+                <a
+                  href={GMAIL_COMPOSE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                  onClick={() => trackSiteEvent("contact_click", { channel: "email_card" })}
                 >
-                  {projectTypeOptions.map((option) => (
-                    <option key={option} value={option} className="bg-black text-white">
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  <Card className="h-full bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
+                    <CardContent className="p-6 flex items-center gap-5">
+                      <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shrink-0">
+                        <Mail className="w-6 h-6 text-primary" />
+                      </div>
+                      <div className="space-y-1 text-left min-w-0">
+                        <h3 className="text-xl font-bold text-primary">Email Us</h3>
+                        <span className="block text-muted-foreground group-hover:text-primary transition-colors text-sm break-all">
+                          {CONTACT_EMAIL}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </a>
 
-              <div className="space-y-2 text-left">
-                <label htmlFor="contact-message" className="text-sm font-semibold text-primary">
-                  Message
-                </label>
-                <textarea
-                  id="contact-message"
-                  name="message"
-                  value={contactForm.message}
-                  onChange={(event) => updateContactField("message", event.target.value)}
-                  required
-                  rows={5}
-                  className="w-full resize-y bg-black/40 border border-primary/25 px-4 py-3 text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  placeholder="Tell us what you want to make, what stage it is in, and any references you already have."
-                />
-              </div>
-
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="bg-[#3abfb5] hover:bg-[#3abfb5] text-black font-bold px-6 py-6 rounded-full shadow-[0_0_20px_rgba(58,193,182,0.35)] hover:shadow-[0_0_30px_rgba(58,193,182,0.55)] transition-all duration-300 border-none"
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                  onClick={() => trackSiteEvent("contact_click", { channel: "whatsapp_card" })}
                 >
-                  <Send className="w-4 h-4 mr-2" />
-                  Send Brief
-                </Button>
-                {contactStatus && (
-                  <p className="text-sm text-muted-foreground" role="status">
-                    {contactStatus}
-                  </p>
-                )}
+                  <Card className="h-full bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
+                    <CardContent className="p-6 flex items-center gap-5">
+                      <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shrink-0">
+                        <MessageCircle className="w-6 h-6 text-primary" />
+                      </div>
+                      <div className="space-y-1 text-left">
+                        <h3 className="text-xl font-bold text-primary">WhatsApp</h3>
+                        <span className="block text-muted-foreground group-hover:text-primary transition-colors text-sm">
+                          Chat with us
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </a>
               </div>
-            </form>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <a
-                href={GMAIL_COMPOSE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
-                onClick={() => trackSiteEvent("contact_click", { channel: "email_card" })}
-              >
-                <Card className="bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
-                  <CardContent className="p-8 flex flex-col items-center gap-6">
-                    <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <Mail className="w-8 h-8 text-primary" />
-                    </div>
-                    <div className="space-y-2 text-center">
-                      <h3 className="text-xl font-bold text-primary">Email Us</h3>
-                      <span className="block text-muted-foreground group-hover:text-primary transition-colors text-lg">
-                        {CONTACT_EMAIL}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </a>
-
-              <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
-                onClick={() => trackSiteEvent("contact_click", { channel: "whatsapp_card" })}
-              >
-                <Card className="bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
-                  <CardContent className="p-8 flex flex-col items-center gap-6">
-                    <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <MessageCircle className="w-8 h-8 text-primary" />
-                    </div>
-                    <div className="space-y-2 text-center">
-                      <h3 className="text-xl font-bold text-primary">WhatsApp</h3>
-                      <span className="block text-muted-foreground group-hover:text-primary transition-colors text-lg">
-                        Chat with us
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </a>
             </div>
           </div>
         </div>
