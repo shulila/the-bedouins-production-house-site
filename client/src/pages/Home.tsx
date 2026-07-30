@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Mail, MessageCircle, Moon, Pause, Play, Send, Sun, Volume2, VolumeX } from "lucide-react";
+import { Mail, MessageCircle, Moon, Pause, Play, Sun, Volume2, VolumeX } from "lucide-react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 
 const CONTACT_EMAIL = "thebedouins.ai@gmail.com";
@@ -114,12 +114,16 @@ export default function Home() {
 
   const scrollToSection = (target: string) => {
     trackSiteEvent("navigation_click", { target });
-    const element = document.getElementById(target);
+    const element =
+      target === "portfolio"
+        ? document.getElementById("work-featured-film") ?? document.getElementById(target)
+        : document.getElementById(target);
     if (!element) return;
 
     const headerOffset = window.innerWidth < 640 ? 76 : window.innerWidth < 768 ? 96 : 112;
+    const sectionOffset = target === "portfolio" ? headerOffset + 16 : headerOffset;
     const scrollToElement = (behavior: ScrollBehavior) => {
-      const top = element.getBoundingClientRect().top + window.scrollY - headerOffset;
+      const top = element.getBoundingClientRect().top + window.scrollY - sectionOffset;
       window.scrollTo({ top: Math.max(0, top), behavior });
     };
 
@@ -393,21 +397,25 @@ export default function Home() {
     { id: "creative-concepts", src: "/videos/ai-1.mp4", poster: "/images/posters/creative-concepts.jpg", title: "Creative Concepts", subtitle: "AI Visual Studies" },
   ];
 
-  const renderProjectVideo = (project: PortfolioProject) => {
+  const renderProjectVideo = (project: PortfolioProject, isFeatured = false) => {
     const state = getProjectVideoState(project.id);
     const isLoaded = Boolean(loadedProjectVideos[project.id]);
+    const frameClassName = isFeatured
+      ? "relative aspect-video lg:aspect-[21/9] bg-black overflow-hidden"
+      : "relative aspect-video bg-black overflow-hidden";
+    const mediaFitClassName = isFeatured ? "object-contain" : "object-cover";
 
     return (
       <div
         ref={setProjectVideoContainerRef(project.id)}
-        className="relative aspect-video bg-black overflow-hidden"
+        className={frameClassName}
       >
         <img
           src={project.poster}
           alt=""
           loading="lazy"
           aria-hidden="true"
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+          className={`absolute inset-0 w-full h-full ${mediaFitClassName} transition-opacity duration-500 ${
             isLoaded ? "opacity-0" : "opacity-100"
           }`}
         />
@@ -421,7 +429,7 @@ export default function Home() {
           playsInline
           preload={isLoaded ? "metadata" : "none"}
           data-project-video={project.id}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+          className={`absolute inset-0 w-full h-full ${mediaFitClassName} transition-opacity duration-500 ${
             isLoaded ? "opacity-100" : "opacity-0"
           }`}
           aria-label={project.title}
@@ -709,8 +717,8 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Featured Project Video Card */}
-            <Card className="col-span-1 md:col-span-2 lg:col-span-3 bg-black/40 border-primary/30 overflow-hidden group hover:border-primary/60 transition-all duration-500 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
-              {renderProjectVideo(featuredProject)}
+            <Card id="work-featured-film" className="col-span-1 md:col-span-2 lg:col-span-3 bg-black/40 border-primary/30 overflow-hidden group hover:border-primary/60 transition-all duration-500 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
+              {renderProjectVideo(featuredProject, true)}
               <CardContent className="p-6 relative z-10 bg-background/80 backdrop-blur-md">
                 <h3 className="text-2xl font-display font-semibold text-primary mb-2">{featuredProject.title}</h3>
                 <p className="text-base text-muted-foreground leading-relaxed">{featuredProject.subtitle}</p>
@@ -800,12 +808,12 @@ export default function Home() {
           <div className="mt-10 sm:mt-14 max-w-4xl mx-auto rounded-xl border border-primary/30 bg-primary/5 backdrop-blur-sm px-5 sm:px-8 py-6 sm:py-8 shadow-[0_0_20px_rgba(58,193,182,0.1)]">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div className="text-left">
-                <p className="text-sm font-sans font-medium text-primary/80 mb-2">
-                  From brief to finished film
-                </p>
                 <h3 className="text-2xl font-display font-semibold leading-snug text-primary">
                   A lean production path, built for cinematic outcomes.
                 </h3>
+                <p className="mt-3 text-sm font-sans font-medium leading-snug text-muted-foreground">
+                  From brief to finished film
+                </p>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left lg:min-w-[28rem]">
@@ -1062,9 +1070,8 @@ export default function Home() {
                     type="submit"
                     size="lg"
                     disabled={isContactSubmitting}
-                    className="bg-[#3abfb5] hover:bg-[#3abfb5] text-black font-display font-semibold px-6 py-6 rounded-full shadow-[0_0_20px_rgba(58,193,182,0.35)] hover:shadow-[0_0_30px_rgba(58,193,182,0.55)] transition-all duration-300 border-none disabled:opacity-60"
+                    className="bg-[#3abfb5] hover:bg-[#3abfb5] text-black font-display font-semibold px-4 sm:px-8 py-5 sm:py-6 text-base sm:text-lg rounded-full shadow-[0_0_20px_rgba(58,193,182,0.4)] hover:shadow-[0_0_30px_rgba(58,193,182,0.6)] transition-all duration-300 hover:scale-105 border-none disabled:opacity-60 disabled:hover:scale-100"
                   >
-                    <Send className="w-4 h-4 mr-2" />
                     {isContactSubmitting ? "Sending..." : "Send Brief"}
                   </Button>
                   {contactStatus && (
