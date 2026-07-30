@@ -934,7 +934,7 @@ export default function Home() {
       {/* Contact Section */}
       <section id="contact" className="scroll-mt-20 sm:scroll-mt-24 py-12 sm:py-16 md:py-24 relative bg-background overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-5xl mx-auto space-y-8 sm:space-y-12">
+          <div className="max-w-5xl mx-auto space-y-10 sm:space-y-16">
             <div className="space-y-4 sm:space-y-6">
               <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-primary drop-shadow-lg font-display">
                 Let's Create Magic
