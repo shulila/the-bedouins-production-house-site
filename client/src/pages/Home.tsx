@@ -811,7 +811,7 @@ export default function Home() {
                 <h3 className="text-2xl font-display font-semibold leading-snug text-primary">
                   A lean production path, built for cinematic outcomes.
                 </h3>
-                <p className="mt-3 text-sm font-sans font-medium leading-snug text-muted-foreground">
+                <p className="mt-4 text-sm font-sans font-medium leading-snug text-muted-foreground">
                   From brief to finished film
                 </p>
               </div>
