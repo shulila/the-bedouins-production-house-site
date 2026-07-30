@@ -403,7 +403,7 @@ export default function Home() {
     { id: "motion-graphics", src: "/videos/ai-6.mp4", poster: "/images/posters/motion-graphics.jpg", title: "Motion Graphics", subtitle: "Brand Animation" },
     { id: "animated-worlds", src: "/videos/ai-2.mp4", poster: "/images/posters/animated-worlds.jpg", title: "Animated Worlds Beyond Reality", subtitle: "AI Worldbuilding" },
     { id: "experimental-visuals", src: "/videos/ai-3.mp4", poster: "/images/posters/experimental-visuals.jpg", title: "Experimental Visual Experiences", subtitle: "Visual Innovation" },
-    { id: "historical-reconstructions", src: "/videos/ai-5.mp4", poster: "/images/posters/historical-reconstructions.jpg", title: "Historical Reconstructions", subtitle: "Visual Reenactments" },
+    { id: "historical-reconstructions", src: "/videos/ai-5-audio.mp4", poster: "/images/posters/historical-reconstructions.jpg", title: "Historical Reconstructions", subtitle: "Visual Reenactments" },
     { id: "ai-storytelling", src: "/videos/ai-4.mp4", poster: "/images/posters/ai-storytelling.jpg", title: "AI Cinematic Storytelling", subtitle: "Generative Cinema" },
     { id: "creative-concepts", src: "/videos/ai-1.mp4", poster: "/images/posters/creative-concepts.jpg", title: "Creative Concepts", subtitle: "AI Visual Studies" },
   ];
