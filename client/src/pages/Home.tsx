@@ -66,7 +66,6 @@ export default function Home() {
   const [contactForm, setContactForm] = useState<ContactFormState>(DEFAULT_CONTACT_FORM);
   const [contactStatus, setContactStatus] = useState("");
   const [isContactSubmitting, setIsContactSubmitting] = useState(false);
-  const [showIntroSoundPrompt, setShowIntroSoundPrompt] = useState(false);
   const introSoundRef = useRef<HTMLAudioElement | null>(null);
   const introSoundPlayedRef = useRef(false);
   const projectVideoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
@@ -76,55 +75,24 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  const playIntroSound = async (showPromptOnBlock = true) => {
+  const playIntroSound = async () => {
     const audio = introSoundRef.current;
-    if (!audio || introSoundPlayedRef.current) return false;
+    if (!audio || introSoundPlayedRef.current) return;
 
     try {
       audio.currentTime = 0;
       audio.volume = 0.75;
       await audio.play();
       introSoundPlayedRef.current = true;
-      setShowIntroSoundPrompt(false);
-      return true;
     } catch {
-      if (showPromptOnBlock) {
-        setShowIntroSoundPrompt(true);
-      }
-      return false;
+      // Browsers may block audible autoplay until the visitor interacts with the page.
     }
   };
 
   useEffect(() => {
     if (!mounted) return;
 
-    const events: Array<keyof WindowEventMap> = ["pointerdown", "touchstart", "click", "keydown"];
-    let listenerActive = true;
-
-    const removeFallbackListeners = () => {
-      if (!listenerActive) return;
-      listenerActive = false;
-      events.forEach((eventName) => {
-        window.removeEventListener(eventName, handleFirstInteraction, true);
-      });
-    };
-
-    async function handleFirstInteraction() {
-      const played = await playIntroSound(false);
-      if (played) {
-        removeFallbackListeners();
-      }
-    }
-
-    events.forEach((eventName) => {
-      window.addEventListener(eventName, handleFirstInteraction, { capture: true, passive: true });
-    });
-
-    void playIntroSound(true);
-
-    return () => {
-      removeFallbackListeners();
-    };
+    void playIntroSound();
   }, [mounted]);
 
   const trackSiteEvent = (eventName: string, payload: Record<string, unknown> = {}) => {
@@ -708,16 +676,6 @@ export default function Home() {
                 ...(theme === 'light' && { filter: 'url(#hide-black-pixels)' }),
               }}
             />
-            {showIntroSoundPrompt && (
-              <button
-                type="button"
-                onClick={() => void playIntroSound(true)}
-                className="absolute right-3 bottom-3 z-20 w-11 h-11 rounded-full border border-primary/40 bg-black/60 backdrop-blur-md flex items-center justify-center text-primary shadow-[0_0_18px_rgba(58,193,182,0.25)] hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all duration-300"
-                aria-label="Play intro sound"
-              >
-                <Volume2 className="w-5 h-5" />
-              </button>
-            )}
           </div>
         </div>
 
