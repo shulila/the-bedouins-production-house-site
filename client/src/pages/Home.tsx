@@ -1,16 +1,31 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Mail, MessageCircle, Moon, Sun } from "lucide-react";
+import { Mail, MessageCircle, Moon, Pause, Play, Sun, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const INTRO_SOUND_SESSION_KEY = "bedouins-intro-sound-played";
+const DEFAULT_PROJECT_VIDEO_STATE = {
+  isMuted: true,
+  isPlaying: true,
+  volume: 0.75,
+};
+
+type ProjectVideoState = typeof DEFAULT_PROJECT_VIDEO_STATE;
+type PortfolioProject = {
+  id: string;
+  src: string;
+  title: string;
+  subtitle: string;
+};
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [hoveredTeamMember, setHoveredTeamMember] = useState<string | null>(null);
+  const [projectVideoStates, setProjectVideoStates] = useState<Record<string, ProjectVideoState>>({});
   const introSoundRef = useRef<HTMLAudioElement | null>(null);
+  const projectVideoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
 
   useEffect(() => {
     setMounted(true);
@@ -83,6 +98,113 @@ export default function Home() {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
+  const getProjectVideoState = (id: string) => ({
+    ...DEFAULT_PROJECT_VIDEO_STATE,
+    ...projectVideoStates[id],
+  });
+
+  const setProjectVideoRef = (id: string) => (node: HTMLVideoElement | null) => {
+    if (node) {
+      projectVideoRefs.current[id] = node;
+    } else {
+      delete projectVideoRefs.current[id];
+    }
+  };
+
+  const updateProjectVideoState = (id: string, updates: Partial<ProjectVideoState>) => {
+    setProjectVideoStates((current) => ({
+      ...current,
+      [id]: {
+        ...DEFAULT_PROJECT_VIDEO_STATE,
+        ...current[id],
+        ...updates,
+      },
+    }));
+  };
+
+  const muteOtherProjectVideos = (activeId: string) => {
+    Object.entries(projectVideoRefs.current).forEach(([id, video]) => {
+      if (id !== activeId && video) {
+        video.muted = true;
+      }
+    });
+
+    setProjectVideoStates((current) => {
+      const next = { ...current };
+      Object.keys(projectVideoRefs.current).forEach((id) => {
+        if (id !== activeId) {
+          next[id] = {
+            ...DEFAULT_PROJECT_VIDEO_STATE,
+            ...current[id],
+            isMuted: true,
+          };
+        }
+      });
+      return next;
+    });
+  };
+
+  const toggleProjectPlayback = async (id: string) => {
+    const video = projectVideoRefs.current[id];
+    if (!video) return;
+
+    if (video.paused) {
+      try {
+        await video.play();
+        updateProjectVideoState(id, { isPlaying: true });
+      } catch {
+        updateProjectVideoState(id, { isPlaying: false });
+      }
+    } else {
+      video.pause();
+      updateProjectVideoState(id, { isPlaying: false });
+    }
+  };
+
+  const toggleProjectSound = async (id: string) => {
+    const video = projectVideoRefs.current[id];
+    if (!video) return;
+
+    const state = getProjectVideoState(id);
+    const nextMuted = !state.isMuted;
+
+    if (!nextMuted) {
+      muteOtherProjectVideos(id);
+      video.volume = state.volume;
+      if (video.paused) {
+        try {
+          await video.play();
+          updateProjectVideoState(id, { isPlaying: true });
+        } catch {
+          updateProjectVideoState(id, { isPlaying: false });
+        }
+      }
+    }
+
+    video.muted = nextMuted;
+    updateProjectVideoState(id, { isMuted: nextMuted });
+  };
+
+  const handleProjectVolumeChange = (id: string, value: string) => {
+    const volume = Number(value);
+    const video = projectVideoRefs.current[id];
+    const nextMuted = volume === 0;
+
+    if (video) {
+      video.volume = volume;
+      video.muted = nextMuted;
+    }
+
+    if (!nextMuted) {
+      muteOtherProjectVideos(id);
+    }
+
+    updateProjectVideoState(id, {
+      volume,
+      isMuted: nextMuted,
+    });
+  };
+
   const teamMembers: Array<{
     id: string;
     name: string;
@@ -141,16 +263,96 @@ export default function Home() {
     },
   ];
 
-  const portfolioProjects: Array<{ src: string; title: string; subtitle: string }> = [
-    { src: "/videos/arlozorov-final.mp4", title: "Who Killed Arlozorov", subtitle: "Educational Visual Experience" },
-    { src: "/videos/ben-gurion-4-web.mp4", title: "Ben-Gurion", subtitle: "Historical Character Study" },
-    { src: "/videos/ai-6.mp4", title: "Motion Graphics", subtitle: "Brand Animation" },
-    { src: "/videos/ai-2.mp4", title: "Animated Worlds Beyond Reality", subtitle: "AI Worldbuilding" },
-    { src: "/videos/ai-3.mp4", title: "Experimental Visual Experiences", subtitle: "Visual Innovation" },
-    { src: "/videos/ai-5.mp4", title: "Historical Reconstructions", subtitle: "Visual Reenactments" },
-    { src: "/videos/ai-4.mp4", title: "AI Cinematic Storytelling", subtitle: "Generative Cinema" },
-    { src: "/videos/ai-1.mp4", title: "Creative Concepts", subtitle: "AI Visual Studies" },
+  const featuredProject: PortfolioProject = {
+    id: "showreel",
+    src: "/videos/showreel.mp4",
+    title: "From Script to Soul",
+    subtitle: "A glimpse to a 15 minutes short film crafted from a client's script, where written story becomes living cinema",
+  };
+
+  const portfolioProjects: PortfolioProject[] = [
+    { id: "arlozorov", src: "/videos/arlozorov-final.mp4", title: "Who Killed Arlozorov", subtitle: "Educational Visual Experience" },
+    { id: "ben-gurion", src: "/videos/ben-gurion-4-web.mp4", title: "Ben-Gurion", subtitle: "Historical Character Study" },
+    { id: "motion-graphics", src: "/videos/ai-6.mp4", title: "Motion Graphics", subtitle: "Brand Animation" },
+    { id: "animated-worlds", src: "/videos/ai-2.mp4", title: "Animated Worlds Beyond Reality", subtitle: "AI Worldbuilding" },
+    { id: "experimental-visuals", src: "/videos/ai-3.mp4", title: "Experimental Visual Experiences", subtitle: "Visual Innovation" },
+    { id: "historical-reconstructions", src: "/videos/ai-5.mp4", title: "Historical Reconstructions", subtitle: "Visual Reenactments" },
+    { id: "ai-storytelling", src: "/videos/ai-4.mp4", title: "AI Cinematic Storytelling", subtitle: "Generative Cinema" },
+    { id: "creative-concepts", src: "/videos/ai-1.mp4", title: "Creative Concepts", subtitle: "AI Visual Studies" },
   ];
+
+  const renderProjectVideo = (project: PortfolioProject) => {
+    const state = getProjectVideoState(project.id);
+
+    return (
+      <div className="relative aspect-video bg-black overflow-hidden">
+        <video
+          ref={setProjectVideoRef(project.id)}
+          src={project.src}
+          autoPlay
+          loop
+          muted={state.isMuted}
+          playsInline
+          preload="metadata"
+          data-project-video={project.id}
+          className="absolute inset-0 w-full h-full object-cover"
+          onPlay={() => updateProjectVideoState(project.id, { isPlaying: true })}
+          onPause={() => updateProjectVideoState(project.id, { isPlaying: false })}
+        />
+
+        <div className="absolute inset-x-0 bottom-0 z-20 p-3 bg-gradient-to-t from-black/85 via-black/35 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 md:focus-within:opacity-100 transition-opacity duration-300">
+          <div className="flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={() => void toggleProjectPlayback(project.id)}
+              className="w-9 h-9 rounded-full border border-primary/40 bg-black/60 backdrop-blur-md flex items-center justify-center text-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors"
+              aria-label={state.isPlaying ? `Pause ${project.title}` : `Play ${project.title}`}
+            >
+              {state.isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
+            </button>
+
+            <div className="flex items-center gap-2 min-w-0">
+              <button
+                type="button"
+                onClick={() => void toggleProjectSound(project.id)}
+                className="w-9 h-9 rounded-full border border-primary/40 bg-black/60 backdrop-blur-md flex items-center justify-center text-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors"
+                aria-label={state.isMuted ? `Unmute ${project.title}` : `Mute ${project.title}`}
+              >
+                {state.isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              </button>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={state.volume}
+                onChange={(event) => handleProjectVolumeChange(project.id, event.target.value)}
+                className="w-20 sm:w-24 accent-primary"
+                aria-label={`Volume for ${project.title}`}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      Object.entries(projectVideoRefs.current).forEach(([id, video]) => {
+        if (!video) return;
+
+        video.muted = getProjectVideoState(id).isMuted;
+        void video.play()
+          .then(() => updateProjectVideoState(id, { isPlaying: true }))
+          .catch(() => updateProjectVideoState(id, { isPlaying: false }));
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [mounted]);
 
   if (!mounted) return null;
 
@@ -321,21 +523,10 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Featured Project Video Card */}
             <Card className="col-span-1 md:col-span-2 lg:col-span-3 bg-black/40 border-primary/30 overflow-hidden group hover:border-primary/60 transition-all duration-500 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
-              <div className="relative aspect-video w-full bg-black overflow-hidden">
-                <video
-                  src="/videos/showreel.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  controls
-                  preload="metadata"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              </div>
+              {renderProjectVideo(featuredProject)}
               <CardContent className="p-6 relative z-10 bg-background/80 backdrop-blur-md">
-                <h3 className="text-2xl font-bold text-primary mb-2">From Script to Soul</h3>
-                <p className="text-muted-foreground">A glimpse to a 15 minutes short film crafted from a client's script, where written story becomes living cinema</p>
+                <h3 className="text-2xl font-bold text-primary mb-2">{featuredProject.title}</h3>
+                <p className="text-muted-foreground">{featuredProject.subtitle}</p>
               </CardContent>
             </Card>
 
@@ -353,15 +544,7 @@ export default function Home() {
                       : ""
                   }`}
                 >
-                  <div className="relative aspect-video bg-black overflow-hidden">
-                    <video
-                      src={project.src}
-                      playsInline
-                      controls
-                      preload="metadata"
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                  </div>
+                  {renderProjectVideo(project)}
                   <CardContent className="p-6">
                     <h3 className="text-xl font-bold text-primary mb-2">{project.title}</h3>
                     <p className="text-sm text-muted-foreground">{project.subtitle}</p>
