@@ -589,13 +589,13 @@ export default function Home() {
             />
           </div>
 
-          <nav className="hidden md:flex items-center gap-3 lg:gap-5" aria-label="Primary navigation">
+          <nav className="hidden md:flex items-center gap-4 lg:gap-6" aria-label="Primary navigation">
             {navItems.map((item) => (
               <button
                 key={item.target}
                 type="button"
                 onClick={() => scrollToSection(item.target)}
-                className="px-3 py-2 rounded-full text-sm font-sans font-medium text-primary/80 hover:text-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all duration-300"
+                className="px-3 py-2 rounded-full text-[15px] font-display font-semibold text-primary/90 hover:text-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all duration-300"
               >
                 {item.label}
               </button>
@@ -737,7 +737,7 @@ export default function Home() {
             <Card className="col-span-1 md:col-span-2 lg:col-span-3 bg-black/40 border-primary/30 overflow-hidden group hover:border-primary/60 transition-all duration-500 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
               {renderProjectVideo(featuredProject)}
               <CardContent className="p-6 relative z-10 bg-background/80 backdrop-blur-md">
-                <h3 className="text-2xl font-sans font-semibold text-primary mb-2">{featuredProject.title}</h3>
+                <h3 className="text-2xl font-display font-semibold text-primary mb-2">{featuredProject.title}</h3>
                 <p className="text-base text-muted-foreground leading-relaxed">{featuredProject.subtitle}</p>
               </CardContent>
             </Card>
@@ -758,7 +758,7 @@ export default function Home() {
                 >
                   {renderProjectVideo(project)}
                   <CardContent className="p-6">
-                    <h3 className="text-xl font-sans font-semibold text-primary mb-2">{project.title}</h3>
+                    <h3 className="text-xl font-display font-semibold text-primary mb-2">{project.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{project.subtitle}</p>
                   </CardContent>
                 </Card>
@@ -811,7 +811,7 @@ export default function Home() {
             ].map((service, index) => (
               <Card key={index} className="bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)] h-auto min-h-[16rem]">
                 <CardContent className="p-8 h-full flex flex-col justify-center text-left">
-                  <h3 className="text-2xl font-sans font-semibold text-primary mb-4 group-hover:text-primary transition-colors">
+                  <h3 className="text-2xl font-display font-semibold text-primary mb-4 group-hover:text-primary transition-colors">
                     {service.title}
                   </h3>
                   <p className="text-muted-foreground text-base leading-relaxed">
@@ -839,7 +839,7 @@ export default function Home() {
                     <span className="block text-xs font-sans font-medium text-primary/70 mb-1">
                       0{index + 1}
                     </span>
-                    <span className="block text-sm font-sans font-medium leading-snug text-foreground/90">
+                    <span className="block text-sm font-sans font-medium leading-snug text-muted-foreground">
                       {step}
                     </span>
                   </div>
@@ -961,10 +961,56 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-6 lg:gap-8 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+              <a
+                href={GMAIL_COMPOSE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+                onClick={() => trackSiteEvent("contact_click", { channel: "email_card" })}
+              >
+                <Card className="h-full bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
+                  <CardContent className="p-8 flex flex-col items-center gap-6">
+                    <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Mail className="w-8 h-8 text-primary" />
+                    </div>
+                    <div className="space-y-2 text-center min-w-0">
+                      <h3 className="text-xl font-display font-semibold text-primary">Email Us</h3>
+                      <span className="block text-muted-foreground group-hover:text-primary transition-colors text-base break-all">
+                        {CONTACT_EMAIL}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </a>
+
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+                onClick={() => trackSiteEvent("contact_click", { channel: "whatsapp_card" })}
+              >
+                <Card className="h-full bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
+                  <CardContent className="p-8 flex flex-col items-center gap-6">
+                    <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <MessageCircle className="w-8 h-8 text-primary" />
+                    </div>
+                    <div className="space-y-2 text-center">
+                      <h3 className="text-xl font-display font-semibold text-primary">WhatsApp</h3>
+                      <span className="block text-muted-foreground group-hover:text-primary transition-colors text-base">
+                        Chat with us
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </a>
+            </div>
+
+            <div>
               <form
                 onSubmit={handleContactSubmit}
-                className="order-2 lg:order-1 rounded-xl border border-primary/25 bg-primary/5 backdrop-blur-sm p-5 sm:p-8 space-y-5 shadow-[0_0_20px_rgba(58,193,182,0.1)]"
+                className="rounded-xl border border-primary/25 bg-primary/5 backdrop-blur-sm p-5 sm:p-8 space-y-5 shadow-[0_0_20px_rgba(58,193,182,0.1)]"
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2 text-left">
@@ -1010,10 +1056,10 @@ export default function Home() {
                     name="projectType"
                     value={contactForm.projectType}
                     onChange={(event) => updateContactField("projectType", event.target.value)}
-                    className="w-full rounded-lg bg-black/40 border border-primary/25 px-4 py-3 text-base text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    className="w-full rounded-lg bg-black/40 border border-primary/25 px-4 py-3 text-base text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   >
                     {projectTypeOptions.map((option) => (
-                      <option key={option} value={option} className="bg-black text-white">
+                      <option key={option} value={option} className="bg-black text-muted-foreground">
                         {option}
                       </option>
                     ))}
@@ -1053,52 +1099,6 @@ export default function Home() {
                   )}
                 </div>
               </form>
-
-              <div className="order-1 lg:order-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-                <a
-                  href={GMAIL_COMPOSE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                  onClick={() => trackSiteEvent("contact_click", { channel: "email_card" })}
-                >
-                  <Card className="h-full bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
-                    <CardContent className="p-6 flex items-center gap-5">
-                      <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shrink-0">
-                        <Mail className="w-6 h-6 text-primary" />
-                      </div>
-                      <div className="space-y-1 text-left min-w-0">
-                        <h3 className="text-xl font-sans font-medium text-primary">Email Us</h3>
-                        <span className="block text-muted-foreground group-hover:text-primary transition-colors text-sm break-all">
-                          {CONTACT_EMAIL}
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </a>
-
-                <a
-                  href={WHATSAPP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                  onClick={() => trackSiteEvent("contact_click", { channel: "whatsapp_card" })}
-                >
-                  <Card className="h-full bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
-                    <CardContent className="p-6 flex items-center gap-5">
-                      <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shrink-0">
-                        <MessageCircle className="w-6 h-6 text-primary" />
-                      </div>
-                      <div className="space-y-1 text-left">
-                        <h3 className="text-xl font-sans font-medium text-primary">WhatsApp</h3>
-                        <span className="block text-muted-foreground group-hover:text-primary transition-colors text-sm">
-                          Chat with us
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </a>
-              </div>
             </div>
           </div>
         </div>

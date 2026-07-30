@@ -150,6 +150,14 @@
   input[type="radio"]:not(:disabled) {
     @apply cursor-pointer;
   }
+  select option {
+    background: #050505;
+    color: #a3a3a3;
+  }
+  select option:checked {
+    background: #123c39;
+    color: #d7f4f1;
+  }
 }
 
 @layer components {
