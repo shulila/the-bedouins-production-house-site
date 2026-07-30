@@ -589,13 +589,13 @@ export default function Home() {
             />
           </div>
 
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2" aria-label="Primary navigation">
+          <nav className="hidden md:flex items-center gap-3 lg:gap-5" aria-label="Primary navigation">
             {navItems.map((item) => (
               <button
                 key={item.target}
                 type="button"
                 onClick={() => scrollToSection(item.target)}
-                className="px-3 lg:px-4 py-2 rounded-full text-sm font-semibold text-primary/75 hover:text-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all duration-300"
+                className="px-3 py-2 rounded-full text-sm font-sans font-medium text-primary/80 hover:text-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all duration-300"
               >
                 {item.label}
               </button>
@@ -737,8 +737,8 @@ export default function Home() {
             <Card className="col-span-1 md:col-span-2 lg:col-span-3 bg-black/40 border-primary/30 overflow-hidden group hover:border-primary/60 transition-all duration-500 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)]">
               {renderProjectVideo(featuredProject)}
               <CardContent className="p-6 relative z-10 bg-background/80 backdrop-blur-md">
-                <h3 className="text-2xl font-bold text-primary mb-2">{featuredProject.title}</h3>
-                <p className="text-muted-foreground">{featuredProject.subtitle}</p>
+                <h3 className="text-2xl font-sans font-semibold text-primary mb-2">{featuredProject.title}</h3>
+                <p className="text-base text-muted-foreground leading-relaxed">{featuredProject.subtitle}</p>
               </CardContent>
             </Card>
 
@@ -758,8 +758,8 @@ export default function Home() {
                 >
                   {renderProjectVideo(project)}
                   <CardContent className="p-6">
-                    <h3 className="text-xl font-bold text-primary mb-2">{project.title}</h3>
-                    <p className="text-sm text-muted-foreground">{project.subtitle}</p>
+                    <h3 className="text-xl font-sans font-semibold text-primary mb-2">{project.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{project.subtitle}</p>
                   </CardContent>
                 </Card>
               );
@@ -811,7 +811,7 @@ export default function Home() {
             ].map((service, index) => (
               <Card key={index} className="bg-primary/5 border-primary/30 backdrop-blur-sm hover:bg-primary/10 transition-all duration-500 group hover:-translate-y-1 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:shadow-[0_0_30px_rgba(58,193,182,0.3)] h-auto min-h-[16rem]">
                 <CardContent className="p-8 h-full flex flex-col justify-center text-left">
-                  <h3 className="text-2xl font-bold text-primary mb-4 group-hover:text-primary transition-colors">
+                  <h3 className="text-2xl font-sans font-semibold text-primary mb-4 group-hover:text-primary transition-colors">
                     {service.title}
                   </h3>
                   <p className="text-muted-foreground text-base leading-relaxed">
@@ -822,24 +822,24 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="mt-10 sm:mt-14 max-w-4xl mx-auto border border-primary/30 bg-primary/5 backdrop-blur-sm px-5 sm:px-8 py-6 sm:py-8 shadow-[0_0_20px_rgba(58,193,182,0.1)]">
+          <div className="mt-10 sm:mt-14 max-w-4xl mx-auto rounded-xl border border-primary/30 bg-primary/5 backdrop-blur-sm px-5 sm:px-8 py-6 sm:py-8 shadow-[0_0_20px_rgba(58,193,182,0.1)]">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div className="text-left">
-                <p className="text-sm font-semibold text-primary/80 mb-2">
+                <p className="text-sm font-sans font-medium text-primary/80 mb-2">
                   From brief to finished film
                 </p>
-                <h3 className="text-2xl font-bold text-primary">
+                <h3 className="text-xl sm:text-2xl font-sans font-medium leading-snug text-primary">
                   A lean production path, built for cinematic outcomes.
                 </h3>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left lg:min-w-[28rem]">
                 {["Brief", "Concept", "AI / Production", "Sound & Delivery"].map((step, index) => (
-                  <div key={step} className="border-l border-primary/30 pl-3">
-                    <span className="block text-xs font-semibold text-primary/70">
+                  <div key={step} className="rounded-lg border border-primary/20 bg-black/20 px-3 py-3">
+                    <span className="block text-xs font-sans font-medium text-primary/70 mb-1">
                       0{index + 1}
                     </span>
-                    <span className="block text-sm sm:text-base font-semibold text-foreground">
+                    <span className="block text-sm font-sans font-medium leading-snug text-foreground/90">
                       {step}
                     </span>
                   </div>
@@ -964,11 +964,11 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-6 lg:gap-8 items-start">
               <form
                 onSubmit={handleContactSubmit}
-                className="order-2 lg:order-1 border border-primary/25 bg-primary/5 backdrop-blur-sm p-5 sm:p-8 space-y-5 shadow-[0_0_20px_rgba(58,193,182,0.1)]"
+                className="order-2 lg:order-1 rounded-xl border border-primary/25 bg-primary/5 backdrop-blur-sm p-5 sm:p-8 space-y-5 shadow-[0_0_20px_rgba(58,193,182,0.1)]"
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2 text-left">
-                    <label htmlFor="contact-name" className="text-sm font-semibold text-primary">
+                    <label htmlFor="contact-name" className="text-sm font-sans font-medium text-primary">
                       Name
                     </label>
                     <input
@@ -978,13 +978,13 @@ export default function Home() {
                       onChange={(event) => updateContactField("name", event.target.value)}
                       autoComplete="name"
                       required
-                      className="w-full bg-black/40 border border-primary/25 px-4 py-3 text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      className="w-full rounded-lg bg-black/40 border border-primary/25 px-4 py-3 text-base text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       placeholder="Your name"
                     />
                   </div>
 
                   <div className="space-y-2 text-left">
-                    <label htmlFor="contact-email" className="text-sm font-semibold text-primary">
+                    <label htmlFor="contact-email" className="text-sm font-sans font-medium text-primary">
                       Email
                     </label>
                     <input
@@ -995,14 +995,14 @@ export default function Home() {
                       onChange={(event) => updateContactField("email", event.target.value)}
                       autoComplete="email"
                       required
-                      className="w-full bg-black/40 border border-primary/25 px-4 py-3 text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      className="w-full rounded-lg bg-black/40 border border-primary/25 px-4 py-3 text-base text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       placeholder="you@example.com"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2 text-left">
-                  <label htmlFor="contact-project-type" className="text-sm font-semibold text-primary">
+                  <label htmlFor="contact-project-type" className="text-sm font-sans font-medium text-primary">
                     Project type
                   </label>
                   <select
@@ -1010,7 +1010,7 @@ export default function Home() {
                     name="projectType"
                     value={contactForm.projectType}
                     onChange={(event) => updateContactField("projectType", event.target.value)}
-                    className="w-full bg-black/40 border border-primary/25 px-4 py-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    className="w-full rounded-lg bg-black/40 border border-primary/25 px-4 py-3 text-base text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   >
                     {projectTypeOptions.map((option) => (
                       <option key={option} value={option} className="bg-black text-white">
@@ -1021,7 +1021,7 @@ export default function Home() {
                 </div>
 
                 <div className="space-y-2 text-left">
-                  <label htmlFor="contact-message" className="text-sm font-semibold text-primary">
+                  <label htmlFor="contact-message" className="text-sm font-sans font-medium text-primary">
                     Message
                   </label>
                   <textarea
@@ -1031,7 +1031,7 @@ export default function Home() {
                     onChange={(event) => updateContactField("message", event.target.value)}
                     required
                     rows={5}
-                    className="w-full resize-y bg-black/40 border border-primary/25 px-4 py-3 text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    className="w-full resize-y rounded-lg bg-black/40 border border-primary/25 px-4 py-3 text-base text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                     placeholder="Tell us what you want to make, what stage it is in, and any references you already have."
                   />
                 </div>
@@ -1041,7 +1041,7 @@ export default function Home() {
                     type="submit"
                     size="lg"
                     disabled={isContactSubmitting}
-                    className="bg-[#3abfb5] hover:bg-[#3abfb5] text-black font-bold px-6 py-6 rounded-full shadow-[0_0_20px_rgba(58,193,182,0.35)] hover:shadow-[0_0_30px_rgba(58,193,182,0.55)] transition-all duration-300 border-none disabled:opacity-60"
+                    className="bg-[#3abfb5] hover:bg-[#3abfb5] text-black font-sans font-medium px-6 py-6 rounded-full shadow-[0_0_20px_rgba(58,193,182,0.35)] hover:shadow-[0_0_30px_rgba(58,193,182,0.55)] transition-all duration-300 border-none disabled:opacity-60"
                   >
                     <Send className="w-4 h-4 mr-2" />
                     {isContactSubmitting ? "Sending..." : "Send Brief"}
@@ -1068,7 +1068,7 @@ export default function Home() {
                         <Mail className="w-6 h-6 text-primary" />
                       </div>
                       <div className="space-y-1 text-left min-w-0">
-                        <h3 className="text-xl font-bold text-primary">Email Us</h3>
+                        <h3 className="text-xl font-sans font-medium text-primary">Email Us</h3>
                         <span className="block text-muted-foreground group-hover:text-primary transition-colors text-sm break-all">
                           {CONTACT_EMAIL}
                         </span>
@@ -1090,7 +1090,7 @@ export default function Home() {
                         <MessageCircle className="w-6 h-6 text-primary" />
                       </div>
                       <div className="space-y-1 text-left">
-                        <h3 className="text-xl font-bold text-primary">WhatsApp</h3>
+                        <h3 className="text-xl font-sans font-medium text-primary">WhatsApp</h3>
                         <span className="block text-muted-foreground group-hover:text-primary transition-colors text-sm">
                           Chat with us
                         </span>
