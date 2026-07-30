@@ -805,7 +805,7 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="mt-10 sm:mt-14 max-w-4xl mx-auto rounded-xl border border-primary/30 bg-primary/5 backdrop-blur-sm px-5 sm:px-8 py-6 sm:py-8 shadow-[0_0_20px_rgba(58,193,182,0.1)]">
+          <div className="mt-10 sm:mt-14 max-w-4xl mx-auto rounded-xl border border-primary/30 bg-primary/5 backdrop-blur-sm px-5 sm:px-8 py-6 sm:py-8 shadow-[0_0_20px_rgba(58,193,182,0.1)] hover:bg-primary/10 hover:border-primary/60 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(58,193,182,0.3)] transition-all duration-500 group">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div className="text-left">
                 <h3 className="text-2xl font-display font-semibold leading-snug text-primary">
@@ -818,7 +818,7 @@ export default function Home() {
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left lg:min-w-[28rem]">
                 {["Brief", "Concept", "AI / Production", "Sound & Delivery"].map((step, index) => (
-                  <div key={step} className="rounded-lg border border-primary/20 bg-black/20 px-3 py-3">
+                  <div key={step} className="rounded-lg border border-primary/20 bg-black/20 px-3 py-3 transition-all duration-300 group-hover:border-primary/35 group-hover:bg-black/30">
                     <span className="block text-xs font-sans font-medium text-primary/70 mb-1">
                       0{index + 1}
                     </span>
