@@ -139,7 +139,17 @@ export default function Home() {
 
   const scrollToSection = (target: string) => {
     trackSiteEvent("navigation_click", { target });
-    document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const element = document.getElementById(target);
+    if (!element) return;
+
+    const headerOffset = window.innerWidth < 640 ? 76 : window.innerWidth < 768 ? 96 : 112;
+    const scrollToElement = (behavior: ScrollBehavior) => {
+      const top = element.getBoundingClientRect().top + window.scrollY - headerOffset;
+      window.scrollTo({ top: Math.max(0, top), behavior });
+    };
+
+    scrollToElement("smooth");
+    window.setTimeout(() => scrollToElement("smooth"), 650);
   };
 
   const toggleTheme = () => {
