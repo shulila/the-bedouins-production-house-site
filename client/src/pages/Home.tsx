@@ -2,16 +2,78 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Mail, MessageCircle, Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+const INTRO_SOUND_SESSION_KEY = "bedouins-intro-sound-played";
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [hoveredTeamMember, setHoveredTeamMember] = useState<string | null>(null);
+  const introSoundRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    const wasPlayed = () => {
+      try {
+        return sessionStorage.getItem(INTRO_SOUND_SESSION_KEY) === "true";
+      } catch {
+        return false;
+      }
+    };
+
+    const markPlayed = () => {
+      try {
+        sessionStorage.setItem(INTRO_SOUND_SESSION_KEY, "true");
+      } catch {
+        // Ignore storage errors; playback should still work.
+      }
+    };
+
+    const events: Array<keyof WindowEventMap> = ["pointerdown", "touchstart", "click", "keydown"];
+    let playInProgress = false;
+
+    const removeFallbackListeners = () => {
+      events.forEach((eventName) => {
+        window.removeEventListener(eventName, handleFirstInteraction);
+      });
+    };
+
+    const playIntroSound = async () => {
+      const audio = introSoundRef.current;
+      if (!audio || wasPlayed() || playInProgress) return;
+
+      playInProgress = true;
+      try {
+        audio.currentTime = 0;
+        audio.volume = 0.75;
+        await audio.play();
+        markPlayed();
+        removeFallbackListeners();
+      } catch {
+        playInProgress = false;
+      }
+    };
+
+    function handleFirstInteraction() {
+      void playIntroSound();
+    }
+
+    if (wasPlayed()) return;
+
+    events.forEach((eventName) => {
+      window.addEventListener(eventName, handleFirstInteraction, { once: true, passive: true });
+    });
+
+    void playIntroSound();
+
+    return removeFallbackListeners;
+  }, [mounted]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -94,6 +156,13 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden transition-colors duration-300">
+      <audio
+        ref={introSoundRef}
+        src="/audio/intro-logo-sound.mp3"
+        preload="auto"
+        aria-hidden="true"
+      />
+
       {/* Hidden SVG filter: chroma-keys pure black out of the camel video so it can sit on a light hero in light theme */}
       <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
         <defs>
