@@ -38,6 +38,7 @@ type PortfolioProject = {
   title: string;
   subtitle: string;
   captionSrc?: string;
+  mediaFit?: "cover" | "contain";
 };
 
 const navItems = [
@@ -389,6 +390,7 @@ export default function Home() {
   const portfolioProjects: PortfolioProject[] = [
     { id: "arlozorov", src: "/videos/arlozorov-final.mp4", poster: "/images/posters/arlozorov.jpg", title: "Who Killed Arlozorov", subtitle: "Educational Visual Experience" },
     { id: "ben-gurion", src: "/videos/ben-gurion-4-web.mp4", poster: "/images/posters/ben-gurion.jpg", title: "Ben-Gurion", subtitle: "Historical Character Study" },
+    { id: "sacara", src: "/videos/sacara-final-web.mp4", poster: "/images/posters/sacara.jpg", title: "SACARA", subtitle: "Cinematic Perfume Commercial", mediaFit: "contain" },
     { id: "motion-graphics", src: "/videos/ai-6.mp4", poster: "/images/posters/motion-graphics.jpg", title: "Motion Graphics", subtitle: "Brand Animation" },
     { id: "animated-worlds", src: "/videos/ai-2.mp4", poster: "/images/posters/animated-worlds.jpg", title: "Animated Worlds Beyond Reality", subtitle: "AI Worldbuilding" },
     { id: "experimental-visuals", src: "/videos/ai-3.mp4", poster: "/images/posters/experimental-visuals.jpg", title: "Experimental Visual Experiences", subtitle: "Visual Innovation" },
@@ -403,7 +405,7 @@ export default function Home() {
     const frameClassName = isFeatured
       ? "relative aspect-video lg:aspect-[21/9] bg-black overflow-hidden"
       : "relative aspect-video bg-black overflow-hidden";
-    const mediaFitClassName = isFeatured ? "object-contain" : "object-cover";
+    const mediaFitClassName = isFeatured || project.mediaFit === "contain" ? "object-contain" : "object-cover";
 
     return (
       <div
