@@ -1,6 +1,6 @@
 # The Bedouins Website - Working Instructions
 
-Last updated: 2026-07-31
+Last updated: 2026-09-22
 
 ## Communication
 
@@ -70,6 +70,7 @@ wrangler.toml
 
 ## Video Rules
 
+- Keep commercial projects together within the first two rows of the portfolio grid, with `SACARA` first in that group.
 - Portfolio videos should start muted.
 - Users can play/pause, mute/unmute, and control volume using custom controls.
 - Keep custom controls small and design-consistent.

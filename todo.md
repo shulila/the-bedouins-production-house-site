@@ -1,6 +1,6 @@
 # The Bedouins Website - TODO
 
-Last updated: 2026-07-31
+Last updated: 2026-09-22
 
 ## Done
 
@@ -8,6 +8,7 @@ Last updated: 2026-07-31
 - [x] Update metadata and remove old names from SEO.
 - [x] Standardize main cyan color around `#3abfb5`.
 - [x] Add Ben-Gurion portfolio video in a web-optimized version.
+- [x] Add SACARA in a web-optimized version and lead the commercial work in the portfolio grid.
 - [x] Add custom video controls for portfolio examples: play/pause, mute/unmute, volume.
 - [x] Keep logo animation decorative, muted, looping, and control-free.
 - [x] Add intro logo sound as a separate one-time audio attempt on page load.

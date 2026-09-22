@@ -2,7 +2,7 @@
 
 **Project:** The Bedouins Production House website
 **Status:** Active development
-**Last updated:** 2026-07-31
+**Last updated:** 2026-09-22
 **Current branch:** `main`
 **Current checkpoint:** `ae1b0e5` - `Refine work anchor and contact CTA`
 **Stable rollback checkpoint:** `12753a4` - `checkpoint-before-ux-content-seo-20260730`
@@ -120,7 +120,8 @@ Cloudflare config:
   - Video: `/videos/showreel.mp4`
   - Poster: `/images/posters/showreel.jpg`
 - Featured video uses `object-contain` so the full frame is visible.
-- Smaller portfolio videos keep cropped `object-cover` cards for a consistent grid.
+- Smaller portfolio videos use cropped `object-cover` cards for a consistent grid, except portrait work that needs `object-contain` to preserve the full frame.
+- Commercial work is grouped at the beginning of the portfolio grid and should stay within the first two rows. `SACARA` leads the commercial group.
 - Portfolio videos have custom controls:
   - Play/pause
   - Mute/unmute
@@ -130,9 +131,10 @@ Cloudflare config:
 
 Current portfolio examples:
 
+- `SACARA`
+- `Motion Graphics`
 - `Who Killed Arlozorov`
 - `Ben-Gurion`
-- `Motion Graphics`
 - `Animated Worlds Beyond Reality`
 - `Experimental Visual Experiences`
 - `Historical Reconstructions`
