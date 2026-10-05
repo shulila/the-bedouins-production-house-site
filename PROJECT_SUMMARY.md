@@ -5,7 +5,7 @@
 **Last updated:** 2026-10-06
 **Folder path:** `C:\Users\shill\CLAUDE\The Bedouins Website\site files` (moved 2026-10-05 from `My Works\THE BEDOUINS\😍the-bedouins-production-house-site`)
 **Current branch:** `main`
-**Current checkpoint:** `0bba33a` - `Group commercial work first` (pushed to origin/main, confirmed live - SACARA visible on production)
+**Current checkpoint:** `0bba33a` - `Group commercial work first` (pushed to origin/main on 2026-10-06; the push did NOT deploy the site)
 **Stable rollback checkpoint:** `12753a4` - `checkpoint-before-ux-content-seo-20260730`
 
 ## Live Site
@@ -14,11 +14,13 @@ Production URL:
 
 `https://the-bedouins-production-house.shilla-bahar.workers.dev/`
 
-Latest verified deploy:
+Latest verified deploy (2026-10-06 audit):
 
-- Commit: `ae1b0e5`
-- Cloudflare Version ID: `6b26a721-44db-496d-a93f-e954b4508540`
-- Cache-busted preview: `https://the-bedouins-production-house.shilla-bahar.workers.dev/?v=ae1b0e5`
+- Live bundle: `/assets/index-DqC95c69.js`
+- Same hash as the local build in `dist/public` from 2026-09-22 03:02, so the site was deployed manually with wrangler from this computer on 2026-09-22.
+- SACARA is visible on the live site.
+- Mapping of that deploy to a commit is not verified.
+- Auto-deploy on git push is unproven: no GitHub workflow exists, and the Cloudflare Git integration has not been checked.
 
 The Workers URL still includes the account/subdomain name. A cleaner group URL requires connecting a custom domain or moving the Worker under a different Cloudflare account/subdomain.
 
@@ -85,6 +87,12 @@ pnpm check
 pnpm build
 pnpm exec wrangler deploy
 ```
+
+How to deploy (manual):
+
+1. `pnpm build` (runs `vite build` and the esbuild server bundle).
+2. `pnpm exec wrangler deploy` (uploads `dist/public`).
+3. Open `https://the-bedouins-production-house.shilla-bahar.workers.dev/` and confirm the change is visible. Use `?v=<commit>` to bypass cache.
 
 Cloudflare config:
 

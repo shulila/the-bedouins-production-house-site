@@ -5,8 +5,8 @@ Last updated: 2026-10-06
 ## Done
 
 - [x] Moved project folder from `My Works\THE BEDOUINS\😍the-bedouins-production-house-site` to `C:\Users\shill\CLAUDE\The Bedouins Website\site files` (2026-10-05); relinked `node_modules` via `pnpm install --offline` and confirmed a test build passes.
-- [x] Pushed 2 pending commits to `origin/main`: `146c7a9` (Add SACARA to portfolio), `0bba33a` (Group commercial work first). `git status -sb` confirmed no "ahead" after push (2026-10-06).
-- [x] Verified live site via real browser render (SPA, not raw fetch): SACARA confirmed present on `https://the-bedouins-production-house.shilla-bahar.workers.dev/` (2026-10-06).
+- [x] Pushed 2 pending commits to `origin/main`: `146c7a9` (Add SACARA to portfolio), `0bba33a` (Group commercial work first). The push did not deploy the site; `git status -sb` showed no "ahead" after push (2026-10-06).
+- [x] Verified live site via real browser render (SPA, not raw fetch): SACARA present on `https://the-bedouins-production-house.shilla-bahar.workers.dev/`. The live bundle matches the local build from 2026-09-22, deployed manually with wrangler (2026-10-06).
 
 - [x] Remove Lemon widget and all visible widget traces.
 - [x] Update metadata and remove old names from SEO.
