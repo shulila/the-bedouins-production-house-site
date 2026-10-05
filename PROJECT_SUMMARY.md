@@ -2,9 +2,10 @@
 
 **Project:** The Bedouins Production House website
 **Status:** Active development
-**Last updated:** 2026-09-22
+**Last updated:** 2026-10-06
+**Folder path:** `C:\Users\shill\CLAUDE\The Bedouins Website\site files` (moved 2026-10-05 from `My Works\THE BEDOUINS\😍the-bedouins-production-house-site`)
 **Current branch:** `main`
-**Current checkpoint:** `ae1b0e5` - `Refine work anchor and contact CTA`
+**Current checkpoint:** `0bba33a` - `Group commercial work first` (pushed to origin/main, confirmed live - SACARA visible on production)
 **Stable rollback checkpoint:** `12753a4` - `checkpoint-before-ux-content-seo-20260730`
 
 ## Live Site
@@ -226,6 +227,8 @@ Known risk:
 
 | Commit | Date | Summary |
 | --- | --- | --- |
+| `0bba33a` | 2026-10-05 | Group commercial work first |
+| `146c7a9` | 2026-10-05 | Add SACARA to portfolio |
 | `ae1b0e5` | 2026-07-31 | Refined Work anchor, featured video fit, Process text order, and Send Brief CTA |
 | `c6db1b8` | 2026-07-31 | Removed visible intro sound prompt from logo animation |
 | `f4a60ea` | 2026-07-30 | Unified CTA typography and intro sound fallback |
